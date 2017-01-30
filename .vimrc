@@ -1,4 +1,4 @@
-"$B4pK\E*$J@_Dj(B"
+"基本的な設定"
 set number
 set title 
 set showmatch
@@ -32,7 +32,7 @@ inoremap <silent> <C-d> <Esc>$<Insert><Right> ;<Left><BS><Right>
 "auto indent command"
 map <Space>i gg=<S-g><C-o><C-o>zz
 
-"$BJ8;z%3!<%I4XO"$N@_Dj(B"
+"文字コード関連の設定"
 set encoding=utf-8
 set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 set fileformats=unix,dos,mac
@@ -50,34 +50,34 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 "------------------------------------------------------------"
-"$B$3$l0J2<$K%W%i%0%$%s$rF3F~(B"
+"これ以下にプラグインを導入"
 "------------------------------------------------------------"
 
-"ruby end $BJ]4I(B"
+"ruby end 保管"
 NeoBundle 'tpope/vim-endwise'
 
-" $B%U%!%$%k%*!<%W%sMQ(B how ro = C-p=>$B%P%C%U%!0lMw(B C-n=> CD$B%U%!%$%k(B"
+" ファイルオープン用 how ro = C-p=>バッファ一覧 C-n=> CDファイル"
 NeoBundle 'Shougo/unite.vim'
 
-"$B%+%i!<%9%-!<%^@_Dj(B"
+"カラースキーマ設定"
 NeoBundle 'tomasr/molokai'
 
-"$B%W%m%0%i%_%s%08@8l$N3HD%$G%7%s%?%C%/%9$H$+%5%`%7%s%0(B"
+"プログラミング言語の拡張でシンタックスとかサムシング"
 NeoBundle 'sheerun/vim-polyglot'
 
-"$B%D%j!<>e$GI=<((B"
+"ツリー上で表示"
 NeoBundle 'scrooloose/nerdtree'
 nnoremap :tree :NERDTreeToggle
 NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'Xuyuanp/nerdtree-git-plugin'
 
-"$BJQ99:9J,$rI=<((B"
+"変更差分を表示"
 NeoBundle 'airblade/vim-gitgutter'
 
-"vim$B>e$G%=!<%9$r<B9T$9$k(B"
+"vim上でソースを実行する"
 NeoBundle 'thinca/vim-quickrun'
 
-"$BJd40$r$7$F$/$l$k$O$:(B"
+"補完をしてくれるはず"
 NeoBundle 'Shougo/neocomplete'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
@@ -89,16 +89,17 @@ NeoBundle 'Shougo/vimproc', {
       \    'unix'    : 'make -f make_unix.mak',
       \}
       \}
+NeoBundle 'vim-scripts/javacomplete'
 
 
-"$B3g8L$rJd40(B"
+"括弧を補完"
 NeoBundle 'tpope/vim-surround'
 
-"$B%9%F!<%?%96/2=(B"
+"ステータス強化"
 NeoBundle 'itchyny/lightline.vim'
 
 "-----------------------------------------------------------"
-"$B$3$l0J>e$K%W%i%0%$%s$r=q$/(B"
+"これ以上にプラグインを書く"
 "-----------------------------------------------------------"
 call neobundle#end()
 filetype plugin indent on
@@ -107,18 +108,19 @@ NeoBundleCheck
 
 
 "==========================================================="
-"$B%W%i%0%$%s$r<u$1$F$N@_Dj(B
+"プラグインを受けての設定
 "==========================================================="
 
-"$B%+%i!<%9%-!<%^$N@_Dj(B"
+"カラースキーマの設定"
 syntax on
 set t_Co=256
 colorscheme molokai
 
-"$B%9%F!<%?%9@_Dj(B"
+"ステータス設定"
 let g:lightline = {
       \ 'colorscheme': 'landscape',
       \}
+"complete"
 if has('lua')
   NeoBundleLazy 'Shougo/neocomplete.vim', {
         \ 'depends' : 'Shougo/vimproc',
@@ -126,7 +128,11 @@ if has('lua')
         \ }
 endif
 
-"neocomplete$B$N@_Dj$r0J2<$K<($9(B"
+"java"
+autocmd FileType java :setlocal omnifunc=javacomplete#Complete
+autocmd FileType java :setlocal completefunc=javacomplete#CompleteParamsInfo
+
+"neocompleteの設定を以下に示す"
 let g:neocomplete#enable_at_startup =1
 let g:neocomplete#auto_completion_start_lenghth=3
 let g:neocomplete#enable_ignore_case =1
@@ -138,7 +144,7 @@ let g:neocomplete#sources#tags#cache_limit_size =30000000
 let g:neocomplete#enable_fuzy_completion =1
 let g:neocomplete#lock_buffer_name_pattern ='\ku\'
 
-"unite.vim$B$N@_Dj$r0J2<$K<($9(B"
+"unite.vimの設定を以下に示す"
 let g:unite_enable_start_insert=1
 nmap <silent> <C-u><C-b> :<C-u>Unite buffer<CR>
 nmap <silent> <C-u><C-f> :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
@@ -153,12 +159,12 @@ au FileType unite imap <silent> <buffer> <expr> <C-l> unite#do_action('vsplet')
 au FileType unite nmap <silent> <buffer> <Esc><Esc> q
 au FileType unite imap <silent> <buffer> <Esc><Esc> <Esc>q
 
-"$B%D%j!<4X78$N%5%`%7%s%0(B"
+"ツリー関係のサムシング"
 if argc() == 0
   let g:nerdtree_tabs_open_on_console_startup = 1
 end
 
-"vim$B>e$G$N%3!<%I<B9T(B"
+"vim上でのコード実行"
 set splitbelow
 set splitright
 let g:quickrun_config = {'*': {'hook/time/enable': '1'}, }
