@@ -135,7 +135,7 @@ local DEFAULT=$'%{\e[1;m%}'
 #PROMPT=$BLUE'[%n@%m] %(!.#.$) '$WHITE
 PROMPT=$BLUE'[%n]%# '$WHITE
 # 右側のプロンプト。ここでカレントディレクトリを出す。
-RPROMPT=$GREEN'[%~][%w/%T]'$WHITE 
+RPROMPT=$GREEN'[%~]'$WHITE 
 setopt transient_rprompt
 
 
