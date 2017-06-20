@@ -3,157 +3,157 @@
 ###############
 
 ###############
-# �q�X�g���֘A
+# ヒストリ関連
 ###############
-# �����̕ۑ���
+# 履歴の保存先
 HISTFILE=$HOME/.zsh-history
-## �������ɓW�J���闚���̐�
+## メモリに展開する履歴の数
 # HISTSIZE=10000
-## �ۑ����闚���̐�
+## 保存する履歴の数
 SAVEHIST=10000
 
-## �R�}���h���C���̐擪���X�y�[�X�Ŏn�܂�ꍇ�q�X�g���ɒǉ����Ȃ�
+## コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
-## history (fc -l) �R�}���h���q�X�g�����X�g�����菜���B
+## history (fc -l) コマンドをヒストリリストから取り除く。
 setopt hist_no_store
-## ���O�Ɠ����R�}���h���q�X�g���ɒǉ����Ȃ�
+## 直前と同じコマンドをヒストリに追加しない
 setopt hist_ignore_dups
-## �q�X�g�����Ăяo���Ă�����s����ԂɈ�U�ҏW
+## ヒストリを呼び出してから実行する間に一旦編集
 setopt hist_verify
-## zsh �̊J�n, �I���������q�X�g���t�@�C���ɏ�������
+## zsh の開始, 終了時刻をヒストリファイルに書き込む
 setopt extended_history
-## �]���ȋ󔒂͋l�߂ċL�^
+## 余分な空白は詰めて記録
 setopt hist_reduce_blanks  
-## �Â��R�}���h�Ɠ������͖̂��� 
+## 古いコマンドと同じものは無視 
 setopt hist_save_no_dups
-## �q�X�g���ɒǉ������R�}���h�s���Â����̂Ɠ����Ȃ�Â����̂��폜
+## ヒストリに追加されるコマンド行が古いものと同じなら古いものを削除
 setopt hist_ignore_all_dups
-## �⊮���Ƀq�X�g���������I�ɓW�J         
+## 補完時にヒストリを自動的に展開         
 setopt hist_expand
 
-## Screen�ł̃R�}���h���L�p
-## �V�F�������f����.zshhistory�ɋL�^
+## Screenでのコマンド共有用
+## シェルを横断して.zshhistoryに記録
 setopt inc_append_history
-## �q�X�g�������L
+## ヒストリを共有
 setopt share_history
 
 ###################
-# �f�B���N�g���ύX
+# ディレクトリ変更
 ###################
-## �f�B���N�g���������� cd
+## ディレクトリ名だけで cd
 setopt auto_cd
-## cd ���Ɏ����� push
+## cd 時に自動で push
 setopt auto_pushd
-## �����f�B���N�g���� pushd ���Ȃ�
+## 同じディレクトリを pushd しない
 setopt pushd_ignore_dups
 
 ############
-# ��Ԋ֘A
+# 補間関連
 ############
-## �⊮�@�\�̗L��
+## 補完機能の有効
 autoload -U compinit
 compinit
 
-## TAB �ŏ��ɕ⊮����؂�ւ���
+## TAB で順に補完候補を切り替える
 setopt auto_menu
-## �T�X�y���h���̃v���Z�X�Ɠ����R�}���h�������s�����ꍇ�̓��W���[��
+## サスペンド中のプロセスと同じコマンド名を実行した場合はリジューム
 setopt auto_resume
-## �⊮�����ꗗ�\��
+## 補完候補を一覧表示
 setopt auto_list
-## �J�b�R�̑Ή��Ȃǂ������I�ɕ⊮
+## カッコの対応などを自動的に補完
 setopt auto_param_keys
-## �f�B���N�g�����̕⊮�Ŗ����� / �������I�ɕt�����A���̕⊮�ɔ�����
+## ディレクトリ名の補完で末尾の / を自動的に付加し、次の補完に備える
 setopt auto_param_slash
-## �⊮���̃J�[�\���I����L����
+## 補完候補のカーソル選択を有効に
 zstyle ':completion:*:default' menu select=1
-## �⊮���̐F�Â�
+## 補完候補の色づけ
 eval `dircolors`
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-## �⊮���ꗗ�Ńt�@�C���̎�ʂ��}�[�N�\��
+## 補完候補一覧でファイルの種別をマーク表示
 setopt list_types
-## �⊮�����l�߂ĕ\��
+## 補完候補を詰めて表示
 setopt list_packed
-## �⊮�ŏ������ł��啶���ł��}�b�`������
+## 補完で小文字でも大文字でもマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 #########
-# �O���u
+# グロブ
 #########
-## �g���O���u���g�p
-## �t�@�C������ #, ~, ^ �� 3 �����𐳋K�\���Ƃ��Ĉ���
+## 拡張グロブを使用
+## ファイル名で #, ~, ^ の 3 文字を正規表現として扱う
 setopt extended_glob
-## =command �� command �̃p�X���ɓW�J����
+## =command を command のパス名に展開する
 setopt equals
-## --prefix=/usr �Ȃǂ� = �ȍ~���⊮
+## --prefix=/usr などの = 以降も補完
 setopt magic_equal_subst
-## �t�@�C�����̓W�J�Ŏ������ł͂Ȃ����l�I�Ƀ\�[�g
+## ファイル名の展開で辞書順ではなく数値的にソート
 setopt numeric_glob_sort
 
 ##########
-# ���o��
+# 入出力
 ##########
-## �o�͎�8�r�b�g��ʂ�
+## 出力時8ビットを通す
 setopt print_eight_bit
-## �X�y���`�F�b�N�B�ԈႤ�ƒ������Ă����
+## スペルチェック。間違うと訂正してくれる
 setopt correct
-## �o�͂̕����񖖔��ɉ��s�R�[�h�������ꍇ�ł��\��
+## 出力の文字列末尾に改行コードが無い場合でも表示
 unsetopt promptcr
-## {a-c} �� a b c �ɓW�J����@�\���g����悤�ɂ���
+## {a-c} を a b c に展開する機能を使えるようにする
 setopt brace_ccl
-## Ctrl+S/Ctrl+Q �ɂ��t���[������g��Ȃ��悤�ɂ���
+## Ctrl+S/Ctrl+Q によるフロー制御を使わないようにする
 setopt NO_flow_control
-## �R�}���h���C���ł� # �ȍ~���R�����g�ƌ��Ȃ�
+## コマンドラインでも # 以降をコメントと見なす
 setopt interactive_comments
-## �t�@�C�����̓W�J�Ńf�B���N�g���Ƀ}�b�`�����ꍇ������ / ��t������
+## ファイル名の展開でディレクトリにマッチした場合末尾に / を付加する
 setopt mark_dirs
-## �Ō�̃X���b�V���������I�ɍ폜���Ȃ�
+## 最後のスラッシュを自動的に削除しない
 setopt noautoremoveslash
 
 ###############
-# �L�[�o�C���h
+# キーバインド
 ###############
-## vim���C�N�L�[�o�C���h�ݒ�
+## vimライクキーバインド設定
 bindkey -v
 
 ##################
-# �v�����v�g�֘A
+# プロンプト関連
 ##################
-# �F�L��
+# 色有効
 autoload -U colors
 colors
 
-## �F���g��
+## 色を使う
 setopt prompt_subst
 
-# �F���`
+# 色を定義
 local GREEN=$'%{\e[1;32m%}'
 local BLUE=$'%{\e[1;34m%}'
 local DEFAULT=$'%{\e[1;m%}'
 
-# �ʏ�̃v�����v�g
+# 通常のプロンプト
 #PROMPT=$BLUE'[%n@%m] %(!.#.$) '$WHITE
 PROMPT=$BLUE'[%n]%# '$WHITE
-# �E���̃v�����v�g�B�����ŃJ�����g�f�B���N�g�����o���B
+# 右側のプロンプト。ここでカレントディレクトリを出す。
 RPROMPT=$GREEN'[%D|%T]'
 setopt transient_rprompt
 
 
 ##############
-# �W���u����
+# ジョブ制御
 ##############
-## �����R�}���h jobs �̏o�͂��f�t�H���g�� jobs -l �ɂ���
+## 内部コマンド jobs の出力をデフォルトで jobs -l にする
 setopt long_list_jobs
 
 
 #################
-# ���̑��E������
+# その他・未分類
 #################
-## �R�A�_���v�T�C�Y�𐧌�
+## コアダンプサイズを制限
 # limit coredumpsize 102400
 
 
-## �r�[�v��炳�Ȃ�
+## ビープを鳴らさない
 setopt nobeep
 
 #########
@@ -174,7 +174,7 @@ alias cdpp='cd ../../'
 
 
 #######################
-# �O���[�o���G�C���A�X
+# グローバルエイリアス
 #######################
 alias -g L='| less'
 alias -g H='| head'
@@ -185,9 +185,9 @@ alias -g GI='| grep -i'
 ############
 # Function 
 ############
-# cd ���� ls ����
+# cd して ls する
 function cdls() {
-    # cd��alias�Ń��[�v����̂�\������
+    # cdがaliasでループするので\をつける
     \cd $1;
     ls;
 }
