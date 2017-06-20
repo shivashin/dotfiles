@@ -204,7 +204,7 @@ export CPATH=/usr/local/include
 ##############
 # plugin
 ##############
-source ~/.zplug/init.zsh
+source ~/zplug/init.zsh
 
 # Make sure to use double quotes
 zplug "zsh-users/zsh-history-substring-search"
