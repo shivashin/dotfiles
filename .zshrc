@@ -135,7 +135,7 @@ local DEFAULT=$'%{\e[1;m%}'
 #PROMPT=$BLUE'[%n@%m] %(!.#.$) '$WHITE
 PROMPT=$BLUE'[%n]%# '$WHITE
 # 右側のプロンプト。ここでカレントディレクトリを出す。
-RPROMPT=$GREEN'[%w]'$WHITE 
+RPROMPT=$GREEN'[%D|%T]'
 setopt transient_rprompt
 
 
@@ -265,6 +265,7 @@ zplug "zsh-users/zaw"
 # Load theme file
 zplug 'dracula/zsh', as:theme
 #zplug 'yous/lime', as:theme
+#zplug "themes/agnoster", from:oh-my-zsh
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
