@@ -172,6 +172,9 @@ alias l='less'
 alias cdp='cd ../'
 alias cdpp='cd ../../'
 
+alias sd='sudo docker'
+alias ss='sudo service'
+
 
 #######################
 # グローバルエイリアス
