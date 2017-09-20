@@ -226,15 +226,6 @@ set splitright
 
 " LaTeX Quickrun
 let g:quickrun_config = {
-\   "tex" : {
-\     'runner' : 'vimproc',
-\     'command' : 'latexmk_wrapper',
-\     'outputter' : 'error',
-\     'outputter/error/success' : 'null',
-\     'outputter/error/error' : 'quickfix',
-\     'srcfile' : expand("%s"),
-\     'exec': '%c %s %a %o',
-\   },
 \   "*" : {
 \     'hook/time/enable': '1'
 \   },
