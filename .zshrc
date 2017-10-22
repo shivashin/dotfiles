@@ -173,6 +173,7 @@ alias cdp='cd ../'
 alias cdpp='cd ../../'
 
 
+
 #######################
 # グローバルエイリアス
 #######################
@@ -266,6 +267,10 @@ zplug "zsh-users/zaw"
 zplug 'dracula/zsh', as:theme
 #zplug 'yous/lime', as:theme
 #zplug "themes/agnoster", from:oh-my-zsh
+#
+#fish-like autosuggestion
+zplug 'zsh-users/zsh-autosuggestions'
+export TERM=xterm-256color
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then

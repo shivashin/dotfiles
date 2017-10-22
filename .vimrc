@@ -220,4 +220,10 @@ end
 "vim上でのコード実行"
 set splitbelow
 set splitright
-let g:quickrun_config = {'*': {'hook/time/enable': '1'}, }
+
+" LaTeX Quickrun
+let g:quickrun_config = {
+\   "*" : {
+\     'hook/time/enable': '1'
+\   },
+\ }
