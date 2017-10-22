@@ -1,1 +1,1 @@
-/home/14t241/dotfiles/.vim
+/home/shivashin//dotfiles/.vim
