@@ -282,4 +282,6 @@ fi
 
 # Then, source plugins and add commands to $PATH
 zplug load --verbose
-export PATH="$HOME/.rbenv/bin:$PATH"
+[[ -d ~/.rbenv  ]] && \
+    export PATH=${HOME}/.rbenv/bin:${PATH} && \
+    eval "$(rbenv init -)"
