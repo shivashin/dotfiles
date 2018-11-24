@@ -159,7 +159,6 @@ setopt nobeep
 #########
 # Alias 
 #########
-alias ls='ls -F --show-control-chars --color=aut'
 alias ll='ls -ltr'
 alias la='ls -a'
 alias lal='ls -al'
@@ -205,7 +204,7 @@ export CPATH=/usr/local/include
 ##############
 # plugin
 ##############
-source ~/zplug/init.zsh
+source ~/.zplug/init.zsh
 
 # Make sure to use double quotes
 zplug "zsh-users/zsh-history-substring-search"
