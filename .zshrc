@@ -159,6 +159,7 @@ setopt nobeep
 #########
 # Alias 
 #########
+alias ls='ls -F --color=auto'
 alias ll='ls -ltr'
 alias la='ls -a'
 alias lal='ls -al'
