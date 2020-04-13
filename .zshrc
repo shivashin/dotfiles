@@ -11,7 +11,8 @@ HISTFILE=$HOME/.zsh-history
 # HISTSIZE=10000
 ## 保存する履歴の数
 SAVEHIST=10000
-
+## zshのパス
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 ## コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
 ## history (fc -l) コマンドをヒストリリストから取り除く。
