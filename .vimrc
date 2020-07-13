@@ -21,10 +21,10 @@ imap { {}<LEFT>
 set backspace=start,eol,indent
 
 "normal mode move baffer"
-nnoremap <silent> <C-j> :bprev<CR>
-nnoremap <silent> <C-k> :bnext<CR>
-nnoremap <silent> <C-h> :bfirst<CR>
-nnoremap <silent> <C-l> :blast<CR>
+nnoremap <silent> <C-h> :bprev<CR>
+nnoremap <silent> <C-l> :bnext<CR>
+nnoremap <silent> <C-k> :bfirst<CR>
+nnoremap <silent> <C-j> :blast<CR>
 
 "insert mode move comannd"
 inoremap <C-j> <Down>
