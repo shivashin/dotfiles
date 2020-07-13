@@ -2,13 +2,13 @@
 set number
 set title 
 set showmatch
-set tabstop=2
+set tabstop=4
 set smartindent
 set ignorecase
 set smartcase
 set autoindent
 set expandtab
-set shiftwidth=2
+set shiftwidth=4
 set wrapscan
 set noswapfile
 set nobackup
@@ -19,6 +19,12 @@ imap [ []<LEFT>
 imap ( ()<LEFT>
 imap { {}<LEFT>
 set backspace=start,eol,indent
+
+"normal mode move baffer"
+nnoremap <silent> <C-j> :bprev<CR>
+nnoremap <silent> <C-k> :bnext<CR>
+nnoremap <silent> <C-h> :bfirst<CR>
+nnoremap <silent> <C-l> :blast<CR>
 
 "insert mode move comannd"
 inoremap <C-j> <Down>
