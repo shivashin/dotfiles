@@ -15,6 +15,9 @@ SAVEHIST=10000
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 ## ruby warning ignore
 export RUBYOPT='-W:no-deprecated -W:no-experimental'
+## less hilight
+export LESS='-R'
+export LESSOPEN='| /usr/local/bin/src-hilite-lesspipe.sh  %s'
 ## コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
 ## history (fc -l) コマンドをヒストリリストから取り除く。
