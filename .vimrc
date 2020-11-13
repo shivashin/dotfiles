@@ -104,6 +104,9 @@ NeoBundle 'tpope/vim-surround'
 "ステータス強化"
 NeoBundle 'itchyny/lightline.vim'
 
+"UMLを書くためのプラグイン"
+NeoBundle "aklt/plantuml-syntax"
+
 "-----------------------------------------------------------"
 "これ以上にプラグインを書く"
 "-----------------------------------------------------------"
@@ -233,3 +236,7 @@ let g:quickrun_config = {
 \     'hook/time/enable': '1'
 \   },
 \ }
+
+
+"plantuml"
+let g:plantuml_executable_script = "~/dotfiles/plantuml"
