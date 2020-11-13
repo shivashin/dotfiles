@@ -13,11 +13,19 @@ HISTFILE=$HOME/.zsh-history
 SAVEHIST=10000
 ## zshのパス
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-## ruby warning ignore
-export RUBYOPT='-W:no-deprecated -W:no-experimental'
+## ruby warning ignore only using ruby version over 2.7
+#export RUBYOPT='-W:no-deprecated -W:no-experimental'
 ## less hilight
 export LESS='-R'
 export LESSOPEN='| /usr/local/bin/src-hilite-lesspipe.sh  %s'
+## mysql setting 
+export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"
+## bootsnap setting
+export ENABLE_BOOTSNAP=1
+## spring setting
+export DISABLE_SPRING=1
+## bundle setting
+bundle config --local build.mysql2 --with-opt-lib=/usr/local/opt/openssl/lib --with-opt-include=-I/usr/local/opt/openssl/include　--with-mysql-config=/usr/local/opt/mysql@5.6/bin/mysql_config
 ## コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
 ## history (fc -l) コマンドをヒストリリストから取り除く。
