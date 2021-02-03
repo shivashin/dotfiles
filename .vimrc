@@ -43,6 +43,9 @@ set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set fileformats=unix,dos,mac
 
+"fzf setting"
+set rtp+=/usr/local/opt/fzf
+
 
 "=============================================================="
 "plugin"
@@ -64,6 +67,12 @@ NeoBundle 'tpope/vim-endwise'
 
 " ファイルオープン用 how ro = C-p=>バッファ一覧 C-n=> CDファイル"
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'lambdalisue/unite-grep-vcs'
+
+NeoBundleLazy 'lambdalisue/unite-grep-vcs', {
+    \ 'autoload': {
+    \    'unite_sources': ['grep/git', 'grep/hg'],
+    \}}
 
 "カラースキーマ設定"
 NeoBundle 'tomasr/molokai'
@@ -106,6 +115,16 @@ NeoBundle 'itchyny/lightline.vim'
 
 "UMLを書くためのプラグイン"
 NeoBundle "aklt/plantuml-syntax"
+
+"fzf fizzy search"
+NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+NeoBundle 'junegunn/fzf.vim'
+
+"code check"
+NeoBundle 'w0rp/ale'
+
+"rspec"
+NeoBundle 'thoughtbot/vim-rspec'
 
 "-----------------------------------------------------------"
 "これ以上にプラグインを書く"
@@ -207,19 +226,66 @@ endif
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 "unite.vimの設定を以下に示す"
-let g:unite_enable_start_insert=1
-nmap <silent> <C-u><C-b> :<C-u>Unite buffer<CR>
-nmap <silent> <C-u><C-f> :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-nmap <silent> <C-u><C-r> :<C-u>Unite -buffer-name=register register<CR>
-nmap <silent> <C-u><C-m> :<C-u>Unite file_mru<CR>
-nmap <silent> <C-u><C-u> :<C-u>Unite buffer file_mru<CR>
-nmap <silent> <C-u><C-a> :<C-u>UniteWidthBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
-au FileType unite nmap <silent> <buffer> <expr> <C-j> unite#do_action('splet')
-au FileType unite imap <silent> <buffer> <expr> <C-j> unite#do_action('splet')
-au FileType unite nmap <silent> <buffer> <expr> <C-l> unite#do_action('vsplet')
-au FileType unite imap <silent> <buffer> <expr> <C-l> unite#do_action('vsplet')
-au FileType unite nmap <silent> <buffer> <Esc><Esc> q
-au FileType unite imap <silent> <buffer> <Esc><Esc> <Esc>q
+"unite prefix key.
+nnoremap [unite] <Nop>
+nmap <C-j> [unite]
+"unite general settings
+"インサートモードで開始
+let g:unite_enable_start_insert = 1
+"最近開いたファイル履歴の保存数
+let g:unite_source_file_mru_limit = 50
+"file_mruの表示フォーマットを指定。空にすると表示スピードが高速化される
+let g:unite_source_file_mru_filename_format = ''
+"現在開いているファイルのディレクトリ下のファイル一覧。
+"gitmodeで開く"
+nnoremap <silent> [unite]j :<C-u>Unite file_rec/git<CR>
+"開いていない場合はカレントディレクトリ
+nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+"バッファ一覧
+nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
+"レジスタ一覧
+nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
+"最近使用したファイル一覧
+nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
+"ブックマーク一覧
+nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
+"ブックマークに追加
+nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
+"find"
+nnoremap <silent> [unite]f :<C-u>Unite find<CR>
+"select word grep"
+nnoremap <silent> [unite]g :<C-u>Unite grep/git:. -buffer-name=search-buffer<CR><C-R><C-W>
+"grep"
+nnoremap <silent> [unite]s :<C-u>Unite grep/git:. -buffer-name=search-buffer<CR>
+"uniteを開いている間のキーマッピング
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()"{{{
+	"ESCでuniteを終了
+	nmap <buffer> <ESC> <Plug>(unite_exit)
+	"入力モードのときjjでノーマルモードに移動
+	imap <buffer> jj <Plug>(unite_insert_leave)
+	"入力モードのときctrl+wでバックスラッシュも削除
+	imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+	"ctrl+hで縦に分割して開く
+	nnoremap <silent> <buffer> <expr> <C-h> unite#do_action('left')
+	inoremap <silent> <buffer> <expr> <C-h> unite#do_action('left')
+	"ctrl+jで横に分割して開く
+	nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('below')
+	inoremap <silent> <buffer> <expr> <C-j> unite#do_action('below')
+    "ctrl+kで縦に分割して開く
+	nnoremap <silent> <buffer> <expr> <C-k> unite#do_action('above')
+	inoremap <silent> <buffer> <expr> <C-k> unite#do_action('above')
+	"ctrl+lで横に分割して開く
+	nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
+	inoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
+
+	"ctrl+tでタブに開く
+	nnoremap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
+	inoremap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
+    "ctrl-g"
+    nnoremap <silent> <buffer> <expr> <C-g> unite#do_action('grep')
+	inoremap <silent> <buffer> <expr> <C-g> unite#do_action('grep')
+endfunction"}}}
 
 "ツリー関係のサムシング"
 if argc() == 0
@@ -240,3 +306,28 @@ let g:quickrun_config = {
 
 "plantuml"
 let g:plantuml_executable_script = "~/dotfiles/plantuml"
+
+" deniteと合わせて上部に表示
+let g:fzf_layout = { 'up': '~40%' }
+
+" <C-]>でタグ検索
+nnoremap <silent> <C-]> :call fzf#vim#tags(expand('<cword>'))<CR>
+
+" fzfからファイルにジャンプできるようにする
+let g:fzf_buffers_jump = 1
+
+"ale"
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '-E'
+let g:ale_sign_warning = '-W'
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 1
+
+" RSpec.vim mappings
+map <Space>t :call RunCurrentSpecFile()<CR>
+map <Space>s :call RunNearestSpec()<CR>
+map <Space>l :call RunLastSpec()<CR>
+map <Space>a :call RunAllSpecs()<CR>
