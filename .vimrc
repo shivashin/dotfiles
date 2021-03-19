@@ -92,6 +92,9 @@ NeoBundle 'airblade/vim-gitgutter'
 "vim上でソースを実行する"
 NeoBundle 'thinca/vim-quickrun'
 
+"quickfixに対して置換を行う"
+NeoBundle 'thinca/vim-qfreplace'
+
 "補完をしてくれるはず"
 NeoBundle 'Shougo/neocomplete'
 NeoBundle 'Shougo/neosnippet'
@@ -116,15 +119,18 @@ NeoBundle 'itchyny/lightline.vim'
 "UMLを書くためのプラグイン"
 NeoBundle "aklt/plantuml-syntax"
 
-"fzf fizzy search"
-NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-NeoBundle 'junegunn/fzf.vim'
-
 "code check"
 NeoBundle 'w0rp/ale'
 
 "rspec"
 NeoBundle 'thoughtbot/vim-rspec'
+NeoBundleLazy 'thoughtbot/vim-rspec', {
+                \ 'depends'  : 'tpope/vim-dispatch',
+                \ 'autoload' : { 'filetypes' : ['ruby'] }
+              \ }
+NeoBundle 'itmammoth/run-rspec.vim'
+NeoBundle 'mileszs/ack.vim'
+NeoBundle 'rking/ag.vim'
 
 "-----------------------------------------------------------"
 "これ以上にプラグインを書く"
@@ -236,11 +242,10 @@ let g:unite_enable_start_insert = 1
 let g:unite_source_file_mru_limit = 50
 "file_mruの表示フォーマットを指定。空にすると表示スピードが高速化される
 let g:unite_source_file_mru_filename_format = ''
+
 "現在開いているファイルのディレクトリ下のファイル一覧。
 "gitmodeで開く"
 nnoremap <silent> [unite]j :<C-u>Unite file_rec/git<CR>
-"開いていない場合はカレントディレクトリ
-nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 "バッファ一覧
 nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "レジスタ一覧
@@ -278,7 +283,9 @@ function! s:unite_my_settings()"{{{
 	"ctrl+lで横に分割して開く
 	nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
 	inoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
-
+	"ctrl+rでqfreplace
+    nnoremap <silent> <buffer> <expr> <C-r> unite#do_action('replace')
+    inoremap <silent> <buffer> <expr> <C-r> unite#do_action('replace')
 	"ctrl+tでタブに開く
 	nnoremap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
 	inoremap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
@@ -303,31 +310,42 @@ let g:quickrun_config = {
 \   },
 \ }
 
+let g:quickrun_config._ = {'runner' : 'vimproc'}
+let g:quickrun_config['rspec/bundle'] = {
+  \ 'type': 'rspec/bundle',
+  \ 'command': 'rspec',
+  \ 'exec': 'bundle exec %c %s'
+  \}
+let g:quickrun_config['rspec/normal'] = {
+  \ 'type': 'rspec/normal',
+  \ 'command': 'rspec',
+  \ 'exec': '%c %s'
+  \}
+function! RSpecQuickrun()
+  let b:quickrun_config = {'type' : 'rspec/bundle'}
+endfunction
+autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 
 "plantuml"
 let g:plantuml_executable_script = "~/dotfiles/plantuml"
-
-" deniteと合わせて上部に表示
-let g:fzf_layout = { 'up': '~40%' }
-
-" <C-]>でタグ検索
-nnoremap <silent> <C-]> :call fzf#vim#tags(expand('<cword>'))<CR>
-
-" fzfからファイルにジャンプできるようにする
-let g:fzf_buffers_jump = 1
 
 "ale"
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = '-E'
 let g:ale_sign_warning = '-W'
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+"nmap <silent> <C-k> <Plug>(ale_previous_wrap)"
+"nmap <silent> <C-j> <Plug>(ale_next_wrap)"
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
 let g:ale_open_list = 1
 
-" RSpec.vim mappings
-map <Space>t :call RunCurrentSpecFile()<CR>
-map <Space>s :call RunNearestSpec()<CR>
-map <Space>l :call RunLastSpec()<CR>
-map <Space>a :call RunAllSpecs()<CR>
+let g:run_rspec_bin = 'bundle exec rspec'
+nnoremap <Space>r :RunSpec<CR>
+nnoremap <Space>s :RunSpecLine<CR>
+nnoremap <Space>l :RunSpecLastRun<CR>
+nnoremap <Space>c :RunSpecCloseResult<CR>
+if executable('ag')
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+endif
