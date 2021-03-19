@@ -1,0 +1,13 @@
+[alias]
+    s = status
+    b = branch
+    c = commit
+    a = add
+    d = difftool
+[diff]
+    tool = vimdiff
+[difftool]
+    prompt = false
+[user]
+	name = ryo.shibahara
+	email = ryo.shibahara@aktsk.jp
