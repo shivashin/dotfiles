@@ -2,13 +2,13 @@
 set number
 set title 
 set showmatch
-set tabstop=4
+set tabstop=2
 set smartindent
 set ignorecase
 set smartcase
 set autoindent
 set expandtab
-set shiftwidth=4
+set shiftwidth=2
 set wrapscan
 set noswapfile
 set nobackup
@@ -19,6 +19,8 @@ imap [ []<LEFT>
 imap ( ()<LEFT>
 imap { {}<LEFT>
 set backspace=start,eol,indent
+set incsearch
+set hlsearch
 
 "normal mode move baffer"
 nnoremap <silent> <C-h> :bprev<CR>
@@ -34,6 +36,7 @@ inoremap <C-l> <Right>
 inoremap <silent> <C-a> <Esc>^<Insert>
 inoremap <silent> <C-s> <Esc>$<Insert><Right>
 inoremap <silent> <C-d> <Esc>$<Insert><Right> ;<Left><BS><Right>
+nnoremap <ESC><ESC> :nohl<CR>
 
 "auto indent command"
 map <Space>i gg=<S-g><C-o><C-o>zz
@@ -94,6 +97,7 @@ NeoBundle 'thinca/vim-quickrun'
 
 "quickfixに対して置換を行う"
 NeoBundle 'thinca/vim-qfreplace'
+NeoBundle 'thinca/vim-qfhl'
 
 "補完をしてくれるはず"
 NeoBundle 'Shougo/neocomplete'
@@ -131,6 +135,8 @@ NeoBundleLazy 'thoughtbot/vim-rspec', {
 NeoBundle 'itmammoth/run-rspec.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'rking/ag.vim'
+NeoBundle 'markonm/traces.vim'
+NeoBundle 'nathanaelkane/vim-indent-guides'
 
 "-----------------------------------------------------------"
 "これ以上にプラグインを書く"
@@ -149,6 +155,8 @@ NeoBundleCheck
 syntax on
 set t_Co=256
 colorscheme molokai
+hi Comment ctermfg=244
+hi SpellCap ctermbg=10 ctermfg=9
 
 "ステータス設定"
 let g:lightline = {
@@ -344,8 +352,29 @@ nnoremap <Space>r :RunSpec<CR>
 nnoremap <Space>s :RunSpecLine<CR>
 nnoremap <Space>l :RunSpecLastRun<CR>
 nnoremap <Space>c :RunSpecCloseResult<CR>
+let g:ackprg = 'ag --vimgrep'
+cnoreabbrev Ack Ack!
+nnoremap <Leader>a :Ack!<Space>
+
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
   let g:unite_source_grep_recursive_opt = ''
 endif
+
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_start_level=2
+let g:indent_guides_auto_colors=0
+" 奇数番目のインデントの色
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#444433 ctermbg=black
+" 偶数番目のインデントの色
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#333344 ctermbg=darkgray
+let g:indent_guides_guide_size = 1
+
+let g:qfhl_startup = 'enable'
+let g:qfhl#multi_loclist = 'flush'
+nnoremap [q :cprevious<CR>   " 前へ
+nnoremap ]q :cnext<CR>       " 次へ
+nnoremap [Q :<C-u>cfirst<CR> " 最初へ
+nnoremap ]Q :<C-u>clast<CR>  " 最後へ
+autocmd QuickFixCmdPost *grep* cwindow
