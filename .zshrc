@@ -19,7 +19,7 @@ export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export LESS='-R'
 export LESSOPEN='| /usr/local/bin/src-hilite-lesspipe.sh  %s'
 ## mysql setting 
-export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
 ## bootsnap setting
 export ENABLE_BOOTSNAP=1
 ## spring setting
@@ -52,6 +52,9 @@ setopt hist_expand
 setopt inc_append_history
 ## ヒストリを共有
 setopt share_history
+
+## For m1 Mac homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 ###################
 # ディレクトリ変更
