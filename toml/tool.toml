@@ -8,7 +8,7 @@ repo = 'Shougo/unite.vim'
 repo = 'lambdalisue/unite-grep-vcs'
 
 [[plugin]]
-repo = 'lambdalisue/unite-grep-vcs', {
+repo = 'lambdalisue/unite-grep-vcs'
 
 [[plugin]]
 repo = 'tomasr/molokai'
