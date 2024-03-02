@@ -42,7 +42,7 @@ export class Config extends BaseConfig {
       "toml",
       "load",
       {
-        path: "$BASE_DIR/dpp.toml",
+        path: "~/dotfiles/toml/tool.toml",
         options: {
           lazy: false,
         },

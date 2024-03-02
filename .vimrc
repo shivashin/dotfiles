@@ -79,7 +79,7 @@ execute 'set runtimepath^=' .. s:ext_git
 if s:dpp_base->dpp#min#load_state()
   execute 'set runtimepath^=' .. s:denops_src
   autocmd User DenopsReady
-  \ call dpp#make_state(s:dpp_base, '{TypeScript config file path}')
+  \ call dpp#make_state(s:dpp_base, '~/dotfiles/dpp.ts')
 endif
 
 filetype indent plugin on
@@ -88,16 +88,17 @@ if has('syntax')
   syntax on
 endif
 " Install plugins
-call dpp#async_ext_action('installer', 'install')
+autocmd User DenopsReady call dpp#async_ext_action('installer', 'install')
+
 " Update plugins
-call dpp#async_ext_action('installer', 'update')
+autocmd User DenopsReady call dpp#async_ext_action('installer', 'update')
 
 " Update dpp.vim
-call dpp#async_ext_action('installer', 'update',
+autocmd User DenopsReady call dpp#async_ext_action('installer', 'update',
 \ #{ names: ['dpp.vim'] })
 
 " Check not updated plugins
-call dpp#async_ext_action('installer', 'checkNotUpdated')
+autocmd User DenopsReady call dpp#async_ext_action('installer', 'checkNotUpdated')
 
 " Get not installed plugins
-echo dpp#ext_action('installer', 'getNotInstalled')
+" echo dpp#ext_action('installer', 'getNotInstalled')
