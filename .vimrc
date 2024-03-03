@@ -64,7 +64,7 @@ hi SpellCap ctermbg=10 ctermfg=9
 set nocompatible
 const s:dpp_base = '~/.cache/dpp/'
 const s:dpp_src = '~/.cache/dpp/repos/github.com/Shougo/dpp.vim'
-const s:denops_src = '~/.cache/dpp/repos/github.com/denops/denops.vim'
+const s:denops_src = '~/.cache/dpp/repos/github.com/vim-denops/denops.vim'
 const s:ext_toml = '~/.cache/dpp/repos/github.com/Shougo/dpp-ext-toml'
 const s:ext_lazy = '~/.cache/dpp/repos/github.com/Shougo/dpp-ext-lazy'
 const s:ext_installer = '~/.cache/dpp/repos/github.com/Shougo/dpp-ext-installer'
@@ -75,9 +75,9 @@ execute 'set runtimepath^=' .. s:ext_toml
 execute 'set runtimepath^=' .. s:ext_lazy
 execute 'set runtimepath^=' .. s:ext_installer
 execute 'set runtimepath^=' .. s:ext_git
+execute 'set runtimepath^=' .. s:denops_src
 
 if s:dpp_base->dpp#min#load_state()
-  execute 'set runtimepath^=' .. s:denops_src
   autocmd User DenopsReady
   \ call dpp#make_state(s:dpp_base, '~/dotfiles/dpp.ts')
 endif
@@ -87,19 +87,3 @@ filetype indent plugin on
 if has('syntax')
   syntax on
 endif
-
-" Install plugins
-autocmd User DenopsReady call dpp#async_ext_action('installer', 'install')
-
-" Update plugins
-autocmd User DenopsReady call dpp#async_ext_action('installer', 'update')
-
-" Update dpp.vim
-autocmd User DenopsReady call dpp#async_ext_action('installer', 'update',
-\ #{ names: ['dpp.vim'] })
-
-" Check not updated plugins
-autocmd User DenopsReady call dpp#async_ext_action('installer', 'checkNotUpdated')
-
-" Get not installed plugins
-" echo dpp#ext_action('installer', 'getNotInstalled')

@@ -1,77 +1,77 @@
-[[plugin]]
+[[plugins]]
 repo = 'tpope/vim-endwise'
 
-[[plugin]]
+[[plugins]]
 repo = 'Shougo/unite.vim'
 
-[[plugin]]
+[[plugins]]
 repo = 'lambdalisue/unite-grep-vcs'
 
-[[plugin]]
+[[plugins]]
 repo = 'lambdalisue/unite-grep-vcs'
 
-[[plugin]]
+[[plugins]]
 repo = 'tomasr/molokai'
 
-[[plugin]]
+[[plugins]]
 repo = 'tomasr/molokai'
 
-[[plugin]]
+[[plugins]]
 repo = 'sheerun/vim-polyglot'
 
-[[plugin]]
+[[plugins]]
 repo = 'scrooloose/nerdtree'
 
-[[plugin]]
+[[plugins]]
 repo = 'jistr/vim-nerdtree-tabs'
 
-[[plugin]]
-repo = 'Xuyuanp/nerdtree-git-plugin'
+[[plugins]]
+repo = 'Xuyuanp/nerdtree-git-plugins'
 
-[[plugin]]
+[[plugins]]
 repo = 'airblade/vim-gitgutter'
 
-[[plugin]]
+[[plugins]]
 repo = 'thinca/vim-quickrun'
 
-[[plugin]]
+[[plugins]]
 repo = 'thinca/vim-qfreplace'
 
-[[plugin]]
+[[plugins]]
 repo = 'thinca/vim-qfhl'
 
-[[plugin]]
+[[plugins]]
 repo = 'Shougo/neocomplete'
 
-[[plugin]]
+[[plugins]]
 repo = 'vim-scripts/javacomplete'
 
-[[plugin]]
+[[plugins]]
 repo = 'tpope/vim-surround'
 
-[[plugin]]
+[[plugins]]
 repo = 'itchyny/lightline.vim'
 
-[[plugin]]
+[[plugins]]
 repo = "aklt/plantuml-syntax"
 
-[[plugin]]
+[[plugins]]
 repo = 'w0rp/ale'
 
-[[plugin]]
+[[plugins]]
 repo = 'thoughtbot/vim-rspec'
 
-[[plugin]]
+[[plugins]]
 repo = 'itmammoth/run-rspec.vim'
 
-[[plugin]]
+[[plugins]]
 repo = 'mileszs/ack.vim'
 
-[[plugin]]
+[[plugins]]
 repo = 'rking/ag.vim'
 
-[[plugin]]
+[[plugins]]
 repo = 'markonm/traces.vim'
 
-[[plugin]]
+[[plugins]]
 repo = 'nathanaelkane/vim-indent-guides'
