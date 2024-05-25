@@ -69,18 +69,28 @@ const s:ext_toml = '~/.cache/dpp/repos/github.com/Shougo/dpp-ext-toml'
 const s:ext_lazy = '~/.cache/dpp/repos/github.com/Shougo/dpp-ext-lazy'
 const s:ext_installer = '~/.cache/dpp/repos/github.com/Shougo/dpp-ext-installer'
 const s:ext_git = '~/.cache/dpp/repos/github.com/Shougo/dpp-protocol-git'
+const s:dpp_config = '~/dotfiles/dpp.ts'
 
 execute 'set runtimepath^=' .. s:dpp_src
 execute 'set runtimepath^=' .. s:ext_toml
 execute 'set runtimepath^=' .. s:ext_lazy
-execute 'set runtimepath^=' .. s:ext_installer
 execute 'set runtimepath^=' .. s:ext_git
+execute 'set runtimepath^=' .. s:ext_installer
 execute 'set runtimepath^=' .. s:denops_src
 
 if s:dpp_base->dpp#min#load_state()
   autocmd User DenopsReady
-  \ call dpp#make_state(s:dpp_base, '~/dotfiles/dpp.ts')
+  \ : echohl WarningMsg
+  \ | echomsg 'dpp load_state() is failed'
+  \ | echohl NONE
+  \ | call timer_start(0, {->dpp#make_state(s:dpp_base, s:dpp_config)})
 endif
+
+autocmd User Dpp:makeStatePost
+      \ : echohl WarningMsg
+      \ | echomsg 'dpp make_state() is done'
+      \ | echohl NONE
+
 
 filetype indent plugin on
 

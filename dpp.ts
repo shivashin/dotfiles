@@ -3,8 +3,9 @@ import {
   ContextBuilder,
   Dpp,
   Plugin,
+  Toml,
 } from "https://deno.land/x/dpp_vim@v0.0.2/types.ts";
-import { Denops, fn } from "https://deno.land/x/dpp_vim@v0.0.2/deps.ts";
+import { Denops, fn } from "https://deno.land/x/dpp_vim@v0.0.5/deps.ts";
 
 type Toml = {
   hooks_file?: string;
@@ -32,25 +33,25 @@ export class Config extends BaseConfig {
     });
 
     const [context, options] = await args.contextBuilder.get(args.denops);
+    const dotfilesDir = "~/dotfiles/toml/";
 
     // Load toml plugins
     const tomls: Toml[] = [];
-    const toml = await args.dpp.extAction(
-      args.denops,
-      context,
-      options,
-      "toml",
-      "load",
-      {
-        path: "~/dotfiles/toml/tool.toml",
-        options: {
-          lazy: false,
+    tomls.push(
+      await args.dpp.extAction(
+        args.denops,
+        context,
+        options,
+        "toml",
+        "load",
+        {
+          path: await fn.expand(args.denops, dotfilesDir + "tool.toml"),
+          options: {
+            lazy: false,
+          },
         },
-      },
-    ) as Toml | undefined;
-    if (toml) {
-      tomls.push();
-    }
+      ) as Toml,
+    );
 
     // Merge toml results
     const recordPlugins: Record<string, Plugin> = {};
@@ -85,13 +86,13 @@ export class Config extends BaseConfig {
       {
         plugins: Object.values(recordPlugins),
       },
-    ) as LazyMakeStateResult | undefined;
+    ) as LazyMakeStateResult;
 
     return {
       ftplugins,
       hooksFiles,
-      plugins: lazyResult?.plugins ?? [],
-      stateLines: lazyResult?.stateLines ?? [],
+      plugins: lazyResult?.plugins,
+      stateLines: lazyResult?.stateLines,
     };
   }
 }
