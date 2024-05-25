@@ -8,12 +8,6 @@ repo = 'Shougo/unite.vim'
 repo = 'lambdalisue/unite-grep-vcs'
 
 [[plugins]]
-repo = 'lambdalisue/unite-grep-vcs'
-
-[[plugins]]
-repo = 'tomasr/molokai'
-
-[[plugins]]
 repo = 'tomasr/molokai'
 
 [[plugins]]
@@ -41,7 +35,23 @@ repo = 'thinca/vim-qfreplace'
 repo = 'thinca/vim-qfhl'
 
 [[plugins]]
-repo = 'Shougo/neocomplete'
+repo = 'Shougo/deoplete.nvim'
+
+[[plugins]]
+repo = 'roxma/nvim-yarp'
+
+[[plugins]]
+repo = 'roxma/vim-hug-neovim-rpc'
+
+[[plugins]]
+repo = 'Shougo/neosnippet'
+
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+
+[[plugins]]
+repo = 'Shougo/vimproc'
+build = 'make'
 
 [[plugins]]
 repo = 'vim-scripts/javacomplete'
