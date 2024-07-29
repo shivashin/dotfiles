@@ -3,7 +3,6 @@ import {
   ContextBuilder,
   Dpp,
   Plugin,
-  Toml,
 } from "https://deno.land/x/dpp_vim@v0.0.2/types.ts";
 import { Denops, fn } from "https://deno.land/x/dpp_vim@v0.0.5/deps.ts";
 
@@ -53,6 +52,21 @@ export class Config extends BaseConfig {
       ) as Toml,
     );
 
+    tomls.push(
+      await args.dpp.extAction(
+        args.denops,
+        context,
+        options,
+        "toml",
+        "load",
+        {
+          path: await fn.expand(args.denops, dotfilesDir + "ddu.toml"),
+          options: {
+            lazy: false,
+          },
+        },
+      ) as Toml,
+    );
     // Merge toml results
     const recordPlugins: Record<string, Plugin> = {};
     const ftplugins: Record<string, string> = {};

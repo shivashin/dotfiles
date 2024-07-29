@@ -21,6 +21,7 @@ imap { {}<LEFT>
 set backspace=start,eol,indent
 set incsearch
 set hlsearch
+set re=0
 
 "normal mode move baffer"
 nnoremap <silent> <C-h> :bprev<CR>
@@ -75,7 +76,7 @@ if s:dpp_base->dpp#min#load_state()
   \ : echohl WarningMsg
   \ | echomsg 'dpp load_state() is failed'
   \ | echohl NONE
-  \ | call timer_start(0, {->dpp#make_state(s:dpp_base, s:dpp_config)})
+  \ | call dpp#make_state(s:dpp_base, s:dpp_config)
 endif
 
 autocmd User Dpp:makeStatePost
