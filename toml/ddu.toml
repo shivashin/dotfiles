@@ -1,4 +1,31 @@
 [[plugins]]
+repo = 'thinca/vim-qfreplace'
+hook_add = '''
+function! DduReplace(args)
+  let l:items = a:args->get('items')
+  let qflist = []
+  for item in l:items
+      let l:action = item->get('action')
+    if !has_key(l:action, 'path')
+      continue
+    elseif !has_key(l:action, 'lineNr')
+      continue
+    elseif !has_key(l:action, 'text')
+      continue
+    else
+      call add(qflist, {
+        \ 'filename': item->get('action')->get('path'),
+        \ 'lnum': item->get('action')->get('lineNr'),
+        \ 'text': item->get('action')->get('text')
+        \ })
+    endif
+  endfor
+  call setqflist(qflist)
+  call qfreplace#start('')
+endfunction
+'''
+
+[[plugins]]
 repo = 'Shougo/ddu-ui-ff'
 
 [[plugins]]
@@ -39,6 +66,7 @@ repo = 'Shougo/ddu.vim'
 depends = ['denops.vim']
 on_event = ['BufEnter']
 hook_source = '''
+call ddu#custom#action('kind', 'file', 'replace', { args -> DduReplace(args) })
 call ddu#custom#patch_global({
     \   'ui': 'ff',
     \   'uiParams': {
@@ -122,6 +150,8 @@ call ddu#custom#patch_local('grep', {
     \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'open', 'params': {'command': 'tab drop'}})<CR>
 	  nnoremap <buffer> <Space>
 	  \ <Cmd>call ddu#ui#do_action('toggleSelectItem')<CR>
+    nnoremap <buffer> <C-r>
+    \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'replace'})<CR>
 	  nnoremap <buffer> i
 	  \ <Cmd>call ddu#ui#do_action('openFilterWindow')<CR>
 	  nnoremap <buffer> q
