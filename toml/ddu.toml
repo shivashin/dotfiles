@@ -106,37 +106,6 @@ call ddu#custom#patch_local('grep', {
     \   },
     \ })
 
-call ddu#custom#patch_local('qf', {
-    \   'ui': 'ff',
-    \   'sourceOptions': {
-    \     '_': {
-    \       'matchers': ['matcher_substring'],
-    \     },
-    \   },
-    \   'uiParams': {
-    \     'ff': {
-    \       'startFilter': v:false,
-    \       'highlights': {'selected': 'Statement'},
-    \       'winCol': &columns/8,
-    \       'winWidth': 3*&columns/4,
-    \       'winRow': &lines/8,
-    \       'winHeight': 3*&lines/8,
-    \       'autoAction': {'name':'preview'},
-    \       'previewFloating': v:true,
-    \       'previewCol': &columns/8,
-    \       'previewWidth': 3*&columns/4,
-    \       'previewRow': 7*&lines/8-1,
-    \       'previewHeight': 3*&lines/8,
-    \       }
-    \   },
-    \   'kindOptions': {
-    \     'custom-list': {
-    \       'defaultAction': 'open',
-    \     },
-    \   }
-    \ })
-
-
 	autocmd FileType ddu-ff call s:ddu_ff_my_settings()
 	function s:ddu_ff_my_settings() abort
 	  nnoremap <buffer> <CR>
@@ -185,20 +154,4 @@ call ddu#custom#patch_local('qf', {
     \     },
     \   },
     \ })<CR>
-
-  let format='%T|%p|%y|%t'
-  nnoremap <C-j>f
-    \ <Cmd> call ddu#start({
-    \ 'name': 'qf', 'sources': [
-    \ {'name': 'qf',
-    \ 'params': {'what': {'title': ':vimgrep'},
-    \            'isSubst': v:true,
-    \            'format': format,
-    \            'dup': v:true}},
-    \ {'name': 'qf',
-    \ 'params': {'what': {'title': ':lvimgrep'},
-    \            'isSubst': v:true,
-    \            'format': format,
-    \            'nr': 0,
-    \            'dup': v:true}}]})<CR>
 '''
