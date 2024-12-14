@@ -114,68 +114,6 @@ autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"unite.vimの設定を以下に示す"
-"unite prefix key.
-nnoremap [unite] <Nop>
-nmap <C-j> [unite]
-"unite general settings
-"インサートモードで開始
-let g:unite_enable_start_insert = 1
-"最近開いたファイル履歴の保存数
-let g:unite_source_file_mru_limit = 50
-"file_mruの表示フォーマットを指定。空にすると表示スピードが高速化される
-let g:unite_source_file_mru_filename_format = ''
-
-"現在開いているファイルのディレクトリ下のファイル一覧。
-"gitmodeで開く"
-nnoremap <silent> [unite]j :<C-u>Unite file_rec/git<CR>
-"バッファ一覧
-nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
-"レジスタ一覧
-nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
-"最近使用したファイル一覧
-nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
-"ブックマーク一覧
-nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
-"ブックマークに追加
-nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
-"find"
-nnoremap <silent> [unite]f :<C-u>Unite find<CR>
-"select word grep"
-nnoremap <silent> [unite]g :<C-u>Unite grep/git:. -buffer-name=search-buffer<CR><C-R><C-W>
-"grep"
-nnoremap <silent> [unite]s :<C-u>Unite grep/git:. -buffer-name=search-buffer<CR>
-"uniteを開いている間のキーマッピング
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()"{{{
-	"ESCでuniteを終了
-	nmap <buffer> <ESC> <Plug>(unite_exit)
-	"入力モードのときjjでノーマルモードに移動
-	imap <buffer> jj <Plug>(unite_insert_leave)
-	"入力モードのときctrl+wでバックスラッシュも削除
-	imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-	"ctrl+hで縦に分割して開く
-	nnoremap <silent> <buffer> <expr> <C-h> unite#do_action('left')
-	inoremap <silent> <buffer> <expr> <C-h> unite#do_action('left')
-	"ctrl+jで横に分割して開く
-	nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('below')
-	inoremap <silent> <buffer> <expr> <C-j> unite#do_action('below')
-    "ctrl+kで縦に分割して開く
-	nnoremap <silent> <buffer> <expr> <C-k> unite#do_action('above')
-	inoremap <silent> <buffer> <expr> <C-k> unite#do_action('above')
-	"ctrl+lで横に分割して開く
-	nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
-	inoremap <silent> <buffer> <expr> <C-l> unite#do_action('right')
-	"ctrl+rでqfreplace
-    nnoremap <silent> <buffer> <expr> <C-r> unite#do_action('replace')
-    inoremap <silent> <buffer> <expr> <C-r> unite#do_action('replace')
-	"ctrl+tでタブに開く
-	nnoremap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
-	inoremap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
-    "ctrl-g"
-    nnoremap <silent> <buffer> <expr> <C-g> unite#do_action('grep')
-	inoremap <silent> <buffer> <expr> <C-g> unite#do_action('grep')
-endfunction"}}}
 
 "ツリー関係のサムシング"
 if argc() == 0
@@ -231,12 +169,6 @@ nnoremap <Space>c :RunSpecCloseResult<CR>
 let g:ackprg = 'ag --vimgrep'
 cnoreabbrev Ack Ack!
 nnoremap <Leader>a :Ack!<Space>
-
-if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-  let g:unite_source_grep_recursive_opt = ''
-endif
 
 let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_start_level=2
