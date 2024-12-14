@@ -50,6 +50,9 @@ set fileformats=unix,dos,mac
 "fzf setting"
 set rtp+=/usr/local/opt/fzf
 
+set splitbelow
+set splitright
+
 "=============================================================="
 "plugin"
 "=============================================================="
@@ -84,105 +87,12 @@ autocmd User Dpp:makeStatePost
       \ | echomsg 'dpp make_state() is done'
       \ | echohl NONE
 
-"=============================================================="
-" plugin settings
-"=============================================================="
-
-"カラースキーマの設定"
+"color settings for vim and git"
 syntax on
-set t_Co=256
 colorscheme molokai
+set t_Co=256
 hi Comment ctermfg=244
 hi SpellCap ctermbg=10 ctermfg=9
-
-"ステータス設定"
 let g:lightline = {
       \ 'colorscheme': 'landscape',
       \}
-
-" deoplete setings
-let g:deoplete#enable_at_startup = 1
-inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
-
-"java"
-autocmd FileType java :setlocal omnifunc=javacomplete#Complete
-autocmd FileType java :setlocal completefunc=javacomplete#CompleteParamsInfo
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-"ツリー関係のサムシング"
-if argc() == 0
-  let g:nerdtree_tabs_open_on_console_startup = 1
-end
-
-"vim上でのコード実行"
-set splitbelow
-set splitright
-
-" LaTeX Quickrun
-let g:quickrun_config = {
-\   "*" : {
-\     'hook/time/enable': '1'
-\   },
-\ }
-
-let g:quickrun_config._ = {'runner' : 'vimproc'}
-let g:quickrun_config['rspec/bundle'] = {
-  \ 'type': 'rspec/bundle',
-  \ 'command': 'rspec',
-  \ 'exec': 'bundle exec %c %s'
-  \}
-let g:quickrun_config['rspec/normal'] = {
-  \ 'type': 'rspec/normal',
-  \ 'command': 'rspec',
-  \ 'exec': '%c %s'
-  \}
-function! RSpecQuickrun()
-  let b:quickrun_config = {'type' : 'rspec/bundle'}
-endfunction
-autocmd BufReadPost *_spec.rb call RSpecQuickrun()
-
-"plantuml"
-let g:plantuml_executable_script = "~/dotfiles/plantuml"
-
-"ale"
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '-E'
-let g:ale_sign_warning = '-W'
-"nmap <silent> <C-k> <Plug>(ale_previous_wrap)"
-"nmap <silent> <C-j> <Plug>(ale_next_wrap)"
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 0
-let g:ale_open_list = 1
-
-
-let g:run_rspec_bin = 'bundle exec rspec'
-nnoremap <Space>r :RunSpec<CR>
-nnoremap <Space>s :RunSpecLine<CR>
-nnoremap <Space>l :RunSpecLastRun<CR>
-nnoremap <Space>c :RunSpecCloseResult<CR>
-let g:ackprg = 'ag --vimgrep'
-cnoreabbrev Ack Ack!
-nnoremap <Leader>a :Ack!<Space>
-
-let g:indent_guides_enable_on_vim_startup=1
-let g:indent_guides_start_level=2
-let g:indent_guides_auto_colors=0
-" 奇数番目のインデントの色
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#444433 ctermbg=gray
-" 偶数番目のインデントの色
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#333344 ctermbg=darkgray
-let g:indent_guides_guide_size = 1
-
-let g:qfhl_startup = 'enable'
-let g:qfhl#multi_loclist = 'keep'
-nnoremap [q :cprevious<CR>   " 前へ
-nnoremap ]q :cnext<CR>       " 次へ
-nnoremap [Q :<C-u>cfirst<CR> " 最初へ
-nnoremap ]Q :<C-u>clast<CR>  " 最後へ
-autocmd QuickFixCmdPost *grep* cwindow
