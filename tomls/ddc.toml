@@ -26,15 +26,6 @@ repo = 'Shougo/ddc-source-cmdline-history'
 repo = 'Shougo/ddc-source-around'
 
 [[plugins]]
-repo = 'prabirshrestha/vim-lsp'
-
-[[plugins]]
-repo = 'mattn/vim-lsp-settings'
-
-[[plugins]]
-repo = 'shun/ddc-source-vim-lsp'
-
-[[plugins]]
 repo = 'Shougo/ddc.vim'
 depends = ['denops.vim']
 hook_source = '''
