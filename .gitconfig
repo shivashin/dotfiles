@@ -11,3 +11,5 @@
 [user]
 	name = ryo.shibahara
 	email = ryo.shibahara@aktsk.jp
+[core]
+	editor = vim

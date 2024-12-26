@@ -20,6 +20,8 @@ export LESS='-R'
 export LESSOPEN='| /usr/local/bin/src-hilite-lesspipe.sh  %s'
 ## mysql setting 
 export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
+## For brew setting
+export PATH="/opt/homebrew/bin:$PATH"
 ## bootsnap setting
 export ENABLE_BOOTSNAP=1
 ## spring setting

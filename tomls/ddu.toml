@@ -1,0 +1,187 @@
+[[plugins]]
+repo = 'thinca/vim-qfreplace'
+hook_add = '''
+function! DduReplace(args)
+  let l:items = a:args->get('items')
+  let qflist = []
+  for item in l:items
+      let l:action = item->get('action')
+    if !has_key(l:action, 'path')
+      continue
+    elseif !has_key(l:action, 'lineNr')
+      continue
+    elseif !has_key(l:action, 'text')
+      continue
+    else
+      call add(qflist, {
+        \ 'filename': item->get('action')->get('path'),
+        \ 'lnum': item->get('action')->get('lineNr'),
+        \ 'text': item->get('action')->get('text')
+        \ })
+    endif
+  endfor
+  call setqflist(qflist)
+  call qfreplace#start('')
+endfunction
+'''
+
+[[plugins]]
+repo = 'Shougo/ddu-ui-ff'
+
+[[plugins]]
+repo = 'Shougo/ddu-source-file'
+
+[[plugins]]
+repo = 'Shougo/ddu-source-file_rec'
+
+[[plugins]]
+repo = 'Shougo/ddu-source-register'
+
+[[plugins]]
+repo = 'shun/ddu-source-rg'
+
+[[plugins]]
+repo = 'shun/ddu-source-buffer'
+
+[[plugins]]
+repo = 'Shougo/ddu-filter-matcher_substring'
+
+[[plugins]]
+repo='Shougo/ddu-commands.vim'
+
+[[plugins]]
+repo = 'Shougo/ddu-kind-file'
+
+[[plugins]]
+repo = 'flow6852/ddu-source-qf'
+
+[[plugins]]
+repo = 'lambdalisue/mr.vim'
+
+[[plugins]]
+repo = 'kuuote/ddu-source-mr'
+
+[[plugins]]
+repo = 'Shougo/ddu.vim'
+depends = ['denops.vim']
+on_event = ['BufEnter']
+hook_source = '''
+call ddu#custom#action('kind', 'file', 'replace', { args -> DduReplace(args) })
+call ddu#custom#patch_global({
+    \   'ui': 'ff',
+    \   'uiParams': {
+    \      'ff': {
+    \         'filterFloatingPosition': 'top',
+    \         'prompt': '> ',
+    \         'split': 'horizontal',
+    \         'splitDirection': 'topleft',
+    \         'startFilter': 'v:true',
+    \         'winWidth': '&columns / 2 - 2',
+    \         'previewFloating': 'v:true',
+    \         'previewHeight': '&lines - 8',
+    \         'previewWidth': '&columns / 2 - 2',
+    \         'previewRow': '1',
+    \         'previewCol': '&columns / 2 + 1',
+    \         'previewSplit': 'vertical'
+    \      },
+    \   },
+    \   'kindOptions': {
+    \     'file': {
+    \       'defaultAction': 'open',
+    \     },
+    \   },
+    \   'sourceOptions': {
+    \     '_': {
+    \       'matchers': ['matcher_substring'],
+    \       'ignoreCase': 'true',
+    \     },
+    \   },
+    \   'filterParams': {
+    \      'matcher_substring': {
+    \          'highlightMatched': 'Search',
+    \      },
+    \   },
+    \ })
+call ddu#custom#patch_local('mr', {
+    \   'sources': [
+    \     {
+    \       'name': 'mr'
+    \     },
+    \   ],
+    \ })
+
+call ddu#custom#patch_local('file_rec', {
+    \   'sources': [
+    \     {
+    \       'name': 'file_rec',
+    \       'params': {
+    \         'ignoredDirectories': ['.git', 'vendor', '.next']
+    \       }
+    \     },
+    \   ],
+    \ })
+
+call ddu#custom#patch_local('grep', {
+    \   'sourceParams' : {
+    \     'rg' : {
+    \       'args': ['--column', '--no-heading', '--color', 'never'],
+    \     },
+    \   },
+    \   'uiParams': {
+    \     'ff': {
+    \       'startFilter': v:false,
+    \     }
+    \   },
+    \ })
+
+	autocmd FileType ddu-ff call s:ddu_ff_my_settings()
+	function s:ddu_ff_my_settings() abort
+	  nnoremap <buffer> <CR>
+	  \ <Cmd>call ddu#ui#do_action('itemAction')<CR>
+    nnoremap <buffer> <C-h>
+    \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'open', 'params': {'command': 'leftabove vertical new'}})<CR>
+    nnoremap <buffer> <C-j>
+    \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'open', 'params': {'command': 'split'}})<CR>
+    nnoremap <buffer> <C-k>
+    \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'open', 'params': {'command': 'leftabove split'}})<CR>
+    nnoremap <buffer> <C-l>
+    \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'open', 'params': {'command': 'vsplit'}})<CR>
+    nnoremap <buffer> <C-t>
+    \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'open', 'params': {'command': 'tab drop'}})<CR>
+	  nnoremap <buffer> <Space>
+	  \ <Cmd>call ddu#ui#do_action('toggleSelectItem')<CR>
+    nnoremap <buffer> <C-r>
+    \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'replace'})<CR>
+	  nnoremap <buffer> i
+	  \ <Cmd>call ddu#ui#do_action('openFilterWindow')<CR>
+	  nnoremap <buffer> q
+	  \ <Cmd>call ddu#ui#do_action('quit')<CR>
+	endfunction
+  nnoremap <C-j>j :call ddu#start({'name': 'file_rec'})<CR>
+  nnoremap <C-j>h :call ddu#start({'name': 'mr'})<CR>
+  nnoremap <C-j>g
+    \ <Cmd>call ddu#start({
+    \   'name': 'grep',
+    \   'sources': [{
+    \     'name': 'rg',
+    \   }],
+    \   'sourceParams': {
+    \     'rg': {
+    \       'input': expand('<cword>'),
+    \     },
+    \   },
+    \ })<CR>
+
+  nnoremap <C-j>s
+    \ <Cmd>call ddu#start({
+    \   'volatile': v:false,
+    \   'sources': [{
+    \     'name': 'rg',
+    \   }],
+    \   'sourceParams': {
+    \     'rg': {
+    \       'input': input('Pattern: '),
+    \     },
+    \   },
+    \ })<CR>
+'''

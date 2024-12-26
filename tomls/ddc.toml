@@ -1,0 +1,110 @@
+[[plugins]]
+repo = 'Shougo/ddc-around'
+
+[[plugins]]
+repo = 'Shougo/ddc-matcher_head'
+
+[[plugins]]
+repo = 'Shougo/ddc-sorter_rank'
+
+[[plugins]]
+repo = 'Shougo/ddc-ui-pum'
+
+[[plugins]]
+repo = 'Shougo/pum.vim'
+
+[[plugins]]
+repo = 'LumaKernel/ddc-source-file'
+
+[[plugins]]
+repo = 'Shougo/ddc-source-cmdline'
+
+[[plugins]]
+repo = 'Shougo/ddc-source-cmdline-history'
+
+[[plugins]]
+repo = 'Shougo/ddc-source-around'
+
+[[plugins]]
+repo = 'Shougo/ddc.vim'
+depends = ['denops.vim']
+hook_source = '''
+call ddc#custom#patch_global('ui', 'pum.vim')
+call ddc#custom#patch_global(#{
+        \   ui: 'pum',
+        \   autoCompleteEvents: [
+        \     'InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged',
+        \   ],
+        \   cmdlineSources: {
+        \     ':': ['cmdline', 'cmdline-history', 'around']
+        \   },
+        \ })
+nnoremap :       <Cmd>call CommandlinePre()<CR>:
+
+function! CommandlinePre() abort
+    cnoremap <Tab>   <Cmd>call pum#map#insert_relative(+1)<CR>
+    cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+    cnoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+    cnoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+    cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+    cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+
+    autocmd User DDCCmdlineLeave ++once call CommandlinePost()
+
+    " Enable command line completion for the buffer
+    call ddc#enable_cmdline_completion()
+endfunction
+function! CommandlinePost() abort
+    silent! cunmap <Tab>
+    silent! cunmap <S-Tab>
+    silent! cunmap <C-n>
+    silent! cunmap <C-p>
+    silent! cunmap <C-y>
+    silent! cunmap <C-e>
+endfunction
+call ddc#custom#patch_global('sources', ['around', 'file'])
+call ddc#custom#patch_global('sourceOptions', {
+    \   '_': {
+    \     'matchers': ['matcher_head'],
+    \     'sorters': ['sorter_rank'],
+    \   },
+    \   'around': {
+    \     'mark': 'A',
+    \   },
+    \   'file': {
+    \     'mark': 'F',
+    \     'isVolatile': v:true,
+    \     'forceCompletionPattern': '\S/\S*',
+    \   },
+    \ })
+
+call ddc#custom#patch_filetype(
+    \ ['ps1', 'dosbatch', 'autohotkey', 'registry'], {
+    \ 'sourceOptions': {
+    \   'file': {
+    \     'forceCompletionPattern': '\S\/\S*',
+    \   },
+    \ },
+    \ 'sourceParams': {
+    \   'file': {
+    \     'mode': 'unix',
+    \   },
+    \ }})
+
+call ddc#custom#patch_global(#{
+    \   ui: 'pum',
+    \   autoCompleteEvents: [
+    \     'InsertEnter', 'TextChangedI', 'TextChangedP',
+    \   ],
+    \ })
+call ddc#enable()
+inoremap <silent><expr> <TAB>
+      \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
+      \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+      \ '<TAB>' : ddc#map#manual_complete()
+inoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+'''
