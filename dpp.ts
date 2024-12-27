@@ -36,53 +36,24 @@ export class Config extends BaseConfig {
 
     // Load toml plugins
     const tomls: Toml[] = [];
-    tomls.push(
-      await args.dpp.extAction(
-        args.denops,
-        context,
-        options,
-        "toml",
-        "load",
-        {
-          path: await fn.expand(args.denops, dotfilesDir + "tool.toml"),
-          options: {
-            lazy: false,
+    const tomlFile: string[] = ['tool.toml', 'ddu.toml', 'ddc.toml'];
+    for (const file of tomlFile) {
+      tomls.push(
+        await args.dpp.extAction(
+          args.denops,
+          context,
+          options,
+          "toml",
+          "load",
+          {
+            path: await fn.expand(args.denops, dotfilesDir + file),
+            options: {
+              lazy: false,
+            },
           },
-        },
-      ) as Toml,
-    );
-
-    tomls.push(
-      await args.dpp.extAction(
-        args.denops,
-        context,
-        options,
-        "toml",
-        "load",
-        {
-          path: await fn.expand(args.denops, dotfilesDir + "ddu.toml"),
-          options: {
-            lazy: false,
-          },
-        },
-      ) as Toml,
-    );
-
-    tomls.push(
-      await args.dpp.extAction(
-        args.denops,
-        context,
-        options,
-        "toml",
-        "load",
-        {
-          path: await fn.expand(args.denops, dotfilesDir + "ddc.toml"),
-          options: {
-            lazy: false,
-          },
-        },
-      ) as Toml,
-    );
+        ) as Toml,
+      );
+    }
     // Merge toml results
     const recordPlugins: Record<string, Plugin> = {};
     const ftplugins: Record<string, string> = {};
