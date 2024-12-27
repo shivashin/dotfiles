@@ -86,18 +86,59 @@ setopt auto_list
 setopt auto_param_keys
 ## ディレクトリ名の補完で末尾の / を自動的に付加し、次の補完に備える
 setopt auto_param_slash
-## 補完候補のカーソル選択を有効に
-zstyle ':completion:*:default' menu select=1
 ## 補完候補の色づけ
 eval `dircolors`
 export ZLS_COLORS=$LS_COLORS
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:default' menu select=2
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' '+m:{[:upper:]}={[:lower:]}'
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
+zstyle ':completion:*:messages' format '%F{YELLOW}%d'$DEFAULT
+zstyle ':completion:*:warnings' format '%F{RED}No matches for:''%F{YELLOW} %d'$DEFAULT
+zstyle ':completion:*:descriptions' format '%F{YELLOW}completing %B%d%b'$DEFAULT
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:descriptions' format '%F{yellow}Completing %B%d%b%f'$DEFAULT
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' list-separator '-->'
+zstyle ':completion:*:manuals' separate-sections true
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 ## 補完候補一覧でファイルの種別をマーク表示
 setopt list_types
 ## 補完候補を詰めて表示
 setopt list_packed
 ## 補完で小文字でも大文字でもマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# fzf history
+function fzf-select-history() {
+    BUFFER=$(history -n -r 1 | fzf --query "$LBUFFER" --reverse)
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
+zle -N fzf-select-history
+bindkey '^r' fzf-select-history
+
+# cdr自体の設定
+if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+    autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+    add-zsh-hook chpwd chpwd_recent_dirs
+    zstyle ':completion:*' recent-dirs-insert both
+    zstyle ':chpwd:*' recent-dirs-default true
+    zstyle ':chpwd:*' recent-dirs-max 1000
+fi
+
+# fzf cdr
+function fzf-cdr() {
+    local selected_dir=$(cdr -l | awk '{ print $2 }' | fzf --reverse)
+    if [ -n "$selected_dir" ]; then
+        BUFFER="cd ${selected_dir}"
+        zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N fzf-cdr
+setopt noflowcontrol
+bindkey '^q' fzf-cdr
 
 #########
 # グロブ
@@ -242,12 +283,11 @@ function precmd() {
 }
 
 LASTCMD_END_TIME=$(date "+%H:%M:%S")
-TMOUT=1
-TRAPALRM() {
-    if [ "$WIDGET" != "expand-or-complete" ]; then
-        zle reset-prompt
-    fi
+update-lprompt-accpet-line() {
+  zle .reset-prompt
+  zle .accept-line
 }
+zle -N accept-line update-lprompt-accpet-line
 
 setopt transient_rprompt
 
@@ -285,7 +325,6 @@ alias l='less'
 alias cdp='cd ../'
 alias cdpp='cd ../../'
 alias gitdiff='git difftool --tool=vimdiff --no-prompt'
-
 
 
 #######################
@@ -333,7 +372,6 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # cmplete
 zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zaw"
 
 #fish-like autosuggestion
 zplug 'zsh-users/zsh-autosuggestions'
