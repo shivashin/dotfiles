@@ -1,16 +1,12 @@
-if [ ! -d ~/.cache/dpp/repos/github.com ]; then
-  mkdir -p ~/.cache/dpp/repos/github.com/
-fi
+mkdir -p ~/.cache/dpp/repos/github.com/
 cd ~/.cache/dpp/repos/github.com/
 
 directories=(
   "Shougo"
   "vim-denops"
 )
-for directrory in "${directories[@]}" ; do
-  if [ ! -d ${directrory} ]; then
-    mkdir ${directory}
-  fi
+for directory in "${directories[@]}" ; do
+  mkdir -p ${directory}
 done
 
 cd ./Shougo
