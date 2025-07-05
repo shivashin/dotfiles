@@ -36,7 +36,7 @@ call ddc#custom#patch_global(#{
         \     'InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged',
         \   ],
         \   cmdlineSources: {
-        \     ':': ['cmdline', 'cmdline-history', 'around']
+        \     ':': ['cmdline', 'around']
         \   },
         \ })
 nnoremap :       <Cmd>call CommandlinePre()<CR>:
