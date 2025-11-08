@@ -124,7 +124,7 @@ call ddu#custom#patch_local('file_rec', {
 call ddu#custom#patch_local('grep', {
     \   'sourceParams' : {
     \     'rg' : {
-    \       'args': ['--column', '--no-heading', '--color', 'never'],
+    \       'args': ['--json'],
     \     },
     \   },
     \   'uiParams': {
