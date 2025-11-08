@@ -26,6 +26,9 @@ repo = 'Shougo/ddc-source-cmdline-history'
 repo = 'Shougo/ddc-source-around'
 
 [[plugins]]
+repo = 'matsui54/ddc-buffer'
+
+[[plugins]]
 repo = 'Shougo/ddc.vim'
 depends = ['denops.vim']
 hook_source = '''
@@ -36,7 +39,7 @@ call ddc#custom#patch_global(#{
         \     'InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged',
         \   ],
         \   cmdlineSources: {
-        \     ':': ['cmdline', 'around']
+        \     ':': ['cmdline', 'file', 'cmdline_history']
         \   },
         \ })
 nnoremap :       <Cmd>call CommandlinePre()<CR>:
@@ -62,7 +65,7 @@ function! CommandlinePost() abort
     silent! cunmap <C-y>
     silent! cunmap <C-e>
 endfunction
-call ddc#custom#patch_global('sources', ['around', 'file'])
+call ddc#custom#patch_global('sources', ['around', 'file', 'buffer'])
 call ddc#custom#patch_global('sourceOptions', {
     \   '_': {
     \     'matchers': ['matcher_head'],
@@ -75,6 +78,12 @@ call ddc#custom#patch_global('sourceOptions', {
     \     'mark': 'F',
     \     'isVolatile': v:true,
     \     'forceCompletionPattern': '\S/\S*',
+    \   },
+    \   'cmdline_history': {
+    \     'mark': 'history',
+    \   },
+    \   'buffer': {
+    \     'mark': 'B',
     \   },
     \ })
 
@@ -96,6 +105,14 @@ call ddc#custom#patch_global(#{
     \   autoCompleteEvents: [
     \     'InsertEnter', 'TextChangedI', 'TextChangedP',
     \   ],
+    \ })
+call ddc#custom#patch_global('sourceParams', {
+    \ 'buffer': {
+    \   'requireSameFiletype': v:false,
+    \   'limitBytes': 5000000,
+    \   'fromAltBuf': v:true,
+    \   'forceCollect': v:true,
+    \ },
     \ })
 call ddc#enable()
 inoremap <silent><expr> <TAB>
