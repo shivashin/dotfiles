@@ -341,7 +341,7 @@ zplug "mollifier/anyframe", at:4c23cb60
 zplug "zsh-users/zsh-syntax-highlighting", at:0.8.0, defer:2
 
 # cmplete
-zplug "zsh-users/zsh-completions", at:0.9.0
+zplug "zsh-users/zsh-completions", at:0.36.0
 
 #fish-like autosuggestion
 zplug 'zsh-users/zsh-autosuggestions', at:v0.7.1
