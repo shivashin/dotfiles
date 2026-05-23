@@ -115,7 +115,7 @@ call ddu#custom#patch_local('file_rec', {
     \     {
     \       'name': 'file_rec',
     \       'params': {
-    \         'ignoredDirectories': ['.git', 'vendor', '.next']
+    \         'ignoredDirectories': ['.git', 'vendor', '.next', '.venv']
     \       }
     \     },
     \   ],
