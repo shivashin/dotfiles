@@ -148,8 +148,6 @@ brew "plantuml"
 brew "postgresql@14"
 # Protocol buffers (Google's data interchange format)
 brew "protobuf@21"
-# Reattach process (e.g., tmux) to background
-brew "reattach-to-user-namespace"
 # Persistent key-value database, with built-in net interface
 brew "redis", restart_service: :changed, link: false
 # Search tool like grep and The Silver Searcher
