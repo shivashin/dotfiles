@@ -1,0 +1,10 @@
+# Linux でだけ使う mise の設定（~/.config/mise/conf.d/linux.toml にリンクされる）
+# macOS では Homebrew で入れているが、apt / dnf では入らない・古いものをここで入れる
+[tools]
+fzf = "latest"
+ripgrep = "latest"
+zoxide = "latest"
+# pipx: で入れるツール（mise/config.toml）のインストールに使う
+uv = "latest"
+# Vim の denops.vim が使う
+deno = "latest"
