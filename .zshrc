@@ -80,7 +80,7 @@ setopt auto_param_keys
 ## ディレクトリ名の補完で末尾の / を自動的に付加し、次の補完に備える
 setopt auto_param_slash
 ## 補完候補の色づけ
-eval `dircolors`
+eval "$(gdircolors)"
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' '+m:{[:upper:]}={[:lower:]}'
@@ -218,9 +218,6 @@ function left-prompt {
   back_color='%{\e[30;48;5;' # set background color
   reset='%{\e[0m%}'   # reset
   sharp="\uE0B0"      # triangle
-
-  autoload -Uz add-zsh-hook
-  add-zsh-hook precmd
 
   user="${back_color}${name_b}${text_color}${name_t}"
   dir="${back_color}${path_b}${text_color}${path_t}"
