@@ -5,6 +5,8 @@ ruby = "4.0"
 node = "24"
 python = "3.13"
 terraform = "1.15"
+# onelogin-aws-cli 0.1.19 は pkg_resources を使うため、pkg_resources が残っている setuptools を一緒に入れる
+"pipx:onelogin-aws-cli" = { version = "0.1.19", uvx_args = "--python 3.13 --with setuptools<81" }
 
 [settings]
 # .ruby-version / .node-version / .python-version / .terraform-version も mise で読む
