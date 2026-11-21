@@ -13,23 +13,19 @@ HISTFILE=$HOME/.zsh-history
 # HISTSIZE=10000
 ## 保存する履歴の数
 SAVEHIST=10000
-## zshのパス
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 ## ruby warning ignore only using ruby version over 2.7
 #export RUBYOPT='-W:no-deprecated -W:no-experimental'
 ## less hilight
 export LESS='-R'
-export LESSOPEN='| /usr/local/bin/src-hilite-lesspipe.sh  %s'
+export LESSOPEN='| /opt/homebrew/bin/src-hilite-lesspipe.sh  %s'
 ## mysql setting 
 export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
-## For brew setting
-export PATH="/opt/homebrew/bin:$PATH"
+## For brew setting (Apple Silicon)
+eval "$(/opt/homebrew/bin/brew shellenv)"
 ## bootsnap setting
 export ENABLE_BOOTSNAP=1
 ## spring setting
 export DISABLE_SPRING=1
-## bundle setting
-export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 ## コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
 ## history (fc -l) コマンドをヒストリリストから取り除く。
@@ -54,9 +50,6 @@ setopt hist_expand
 setopt inc_append_history
 ## ヒストリを共有
 setopt share_history
-
-## For m1 Mac homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
 ###################
 # ディレクトリ変更
@@ -320,9 +313,6 @@ function cdls() {
 # Environment 
 ###############
 export LANG=ja_JP.UTF-8
-export LD_LIBRARY_PATH=/usr/local/lib
-export LIBRARY_PATH=/usr/local/lib
-export CPATH=/usr/local/include
 
 
 ##############
