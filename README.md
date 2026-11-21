@@ -43,7 +43,7 @@ git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
 - dotfiles は `~/dotfiles` に clone する必要がある。ほかの場所だと `setup.sh` はエラーで止まる。
 - Linux では、root 以外で実行すると sudo を使う。
 - Amazon Linux 2023 は `curl-minimal` が入っていて、`curl` を入れると衝突するので、`curl` コマンドがあれば入れない。
-- 動作確認は macOS、Ubuntu 24.04、Amazon Linux 2023 で行った。
+- Ubuntu 24.04 と Amazon Linux 2023 では、CI で毎回動作を確認している（下の「CI」を参照）。
 
 実行後の手順:
 
@@ -142,6 +142,27 @@ tmux のセッションは、tmux-resurrect と tmux-continuum で自動的に�
 ```
 
 どちらも、公開から一定の日数がたったリビジョンだけを対象にする。Vim 側は、差分に `curl` や `eval` などの怪しいパターンがないかも確認する。
+
+## CI
+
+GitHub Actions（`.github/workflows/ci.yml`）で、PR と `master` への push のたびに次を確認する。
+
+| ジョブ | 内容 |
+|---|---|
+| `lint` | Linux で shellcheck、`zsh -n .zshrc`、tmux による `.tmux.conf` の文法チェック |
+| `lint-macos` | macOS で `bash -n`、`zsh -n .zshrc`、`.tmux.conf` の文法チェック |
+| `setup-linux` | Ubuntu 24.04 と Amazon Linux 2023 のコンテナで `setup.sh` を 2 回実行し、zsh と tmux がエラーなく起動すること、mise で入れたツールが使えることを確認する |
+
+macOS では `setup.sh` を実行しない。`.Brewfile` の cask まで全部入れると時間がかかりすぎるため。
+
+`setup-linux` は、手元でも Docker で同じように実行できる。
+
+```sh
+docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash /src/.github/scripts/test-setup-linux.sh
+docker run --rm -v "$PWD":/src:ro amazonlinux:2023 bash /src/.github/scripts/test-setup-linux.sh
+```
+
+Rancher Desktop の VM からは macOS の `/tmp` が見えないので、マウントするディレクトリはホーム配下に置く。
 
 ## 既知の注意点
 
