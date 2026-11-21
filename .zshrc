@@ -1,3 +1,5 @@
+# Added by Kiro CLI
+case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="${PATH:+$PATH:}$HOME/.local/bin" ;; esac
 ###############
 # zsh Setting 
 ###############
@@ -391,3 +393,12 @@ function fzf-cdr() {
 zle -N fzf-cdr
 setopt noflowcontrol
 bindkey '^q' fzf-cdr
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="$HOME/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+export PATH=~/.npm-global/bin:$PATH
+
+
+# zoxide (z コマンド / tmux の prefix+N で使うディレクトリ履歴)
+eval "$(zoxide init zsh)"
