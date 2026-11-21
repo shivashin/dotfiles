@@ -1,0 +1,4 @@
+# ~/dotfiles リポジトリでだけ使う個人用の identity（.gitconfig の includeIf から読み込む）
+[user]
+	name = shivashin
+	email = shivashin495@gmail.com

@@ -19,3 +19,6 @@
 	editor = vim
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+# dotfiles リポジトリでは個人用のアドレスを使う（[user] より後に置いて上書きする）
+[includeIf "gitdir:~/dotfiles/"]
+	path = ~/dotfiles/.gitconfig.dotfiles
