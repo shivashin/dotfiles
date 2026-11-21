@@ -30,8 +30,6 @@ export ENABLE_BOOTSNAP=1
 export DISABLE_SPRING=1
 ## bundle setting
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-## rbenv
-eval "$(rbenv init -)"
 ## コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
 ## history (fc -l) コマンドをヒストリリストから取り除く。
@@ -359,9 +357,8 @@ fi
 
 # Then, source plugins and add commands to $PATH
 zplug load --verbose
-[[ -d ~/.rbenv  ]] && \
-    export PATH=${HOME}/.rbenv/bin:${PATH} && \
-    eval "$(rbenv init -)"
+# 言語ランタイム（ruby / node / python など）は mise で管理する
+eval "$(mise activate zsh)"
 
 # fzf history
 function fzf-select-history() {
