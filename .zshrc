@@ -1,6 +1,14 @@
+# Added by Kiro CLI
+case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="${PATH:+$PATH:}$HOME/.local/bin" ;; esac
 ###############
 # zsh Setting 
 ###############
+## 言語（プロンプトの記号を出すため UTF-8 にする。日本語ロケールがない Linux では C.UTF-8 を使う）
+if locale -a 2>/dev/null | grep -qiE '^ja_JP\.utf-?8$'; then
+  export LANG=ja_JP.UTF-8
+else
+  export LANG=C.UTF-8
+fi
 
 ###############
 # ヒストリ関連
@@ -11,25 +19,28 @@ HISTFILE=$HOME/.zsh-history
 # HISTSIZE=10000
 ## 保存する履歴の数
 SAVEHIST=10000
-## zshのパス
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 ## ruby warning ignore only using ruby version over 2.7
 #export RUBYOPT='-W:no-deprecated -W:no-experimental'
 ## less hilight
 export LESS='-R'
-export LESSOPEN='| /usr/local/bin/src-hilite-lesspipe.sh  %s'
-## mysql setting 
-export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
-## For brew setting
-export PATH="/opt/homebrew/bin:$PATH"
+
+## OS ごとの設定
+case "$OSTYPE" in
+  darwin*)
+    # Homebrew（Apple Silicon）
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    export PATH="$HOMEBREW_PREFIX/opt/mysql@8.0/bin:$PATH"
+    export LESSOPEN="| $HOMEBREW_PREFIX/bin/src-hilite-lesspipe.sh %s"
+    ;;
+  linux*)
+    # setup.sh が mise を ~/.local/bin に入れる
+    export PATH="$HOME/.local/bin:$PATH"
+    ;;
+esac
 ## bootsnap setting
 export ENABLE_BOOTSNAP=1
 ## spring setting
 export DISABLE_SPRING=1
-## bundle setting
-export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-## rbenv
-eval "$(rbenv init -)"
 ## コマンドラインの先頭がスペースで始まる場合ヒストリに追加しない
 setopt hist_ignore_space
 ## history (fc -l) コマンドをヒストリリストから取り除く。
@@ -54,9 +65,6 @@ setopt hist_expand
 setopt inc_append_history
 ## ヒストリを共有
 setopt share_history
-
-## For m1 Mac homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
 ###################
 # ディレクトリ変更
@@ -87,7 +95,11 @@ setopt auto_param_keys
 ## ディレクトリ名の補完で末尾の / を自動的に付加し、次の補完に備える
 setopt auto_param_slash
 ## 補完候補の色づけ
-eval `dircolors`
+if (( $+commands[gdircolors] )); then
+  eval "$(gdircolors -b)"
+elif (( $+commands[dircolors] )); then
+  eval "$(dircolors -b)"
+fi
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' menu select=2
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' '+m:{[:upper:]}={[:lower:]}'
@@ -226,9 +238,6 @@ function left-prompt {
   reset='%{\e[0m%}'   # reset
   sharp="\uE0B0"      # triangle
 
-  autoload -Uz add-zsh-hook
-  add-zsh-hook precmd
-
   user="${back_color}${name_b}${text_color}${name_t}"
   dir="${back_color}${path_b}${text_color}${path_t}"
   current_time="${back_color}${time_b}${text_color}${time_t}"
@@ -287,7 +296,6 @@ alias ll='ls -ltr'
 alias la='ls -a'
 alias lal='ls -al'
 
-alias c='cygstart'
 alias r='ruby'
 alias l='less'
 
@@ -319,10 +327,6 @@ function cdls() {
 ###############
 # Environment 
 ###############
-export LANG=ja_JP.UTF-8
-export LD_LIBRARY_PATH=/usr/local/lib
-export LIBRARY_PATH=/usr/local/lib
-export CPATH=/usr/local/include
 
 
 ##############
@@ -357,9 +361,8 @@ fi
 
 # Then, source plugins and add commands to $PATH
 zplug load --verbose
-[[ -d ~/.rbenv  ]] && \
-    export PATH=${HOME}/.rbenv/bin:${PATH} && \
-    eval "$(rbenv init -)"
+# 言語ランタイム（ruby / node / python など）は mise で管理する
+eval "$(mise activate zsh)"
 
 # fzf history
 function fzf-select-history() {
@@ -391,3 +394,11 @@ function fzf-cdr() {
 zle -N fzf-cdr
 setopt noflowcontrol
 bindkey '^q' fzf-cdr
+
+# Rancher Desktop（docker / kubectl など）。Rancher Desktop の PATH 管理は手動にしている
+export PATH="$HOME/.rd/bin:$PATH"
+export PATH=~/.npm-global/bin:$PATH
+
+
+# zoxide (z コマンド / tmux の prefix+N で使うディレクトリ履歴)
+eval "$(zoxide init zsh)"
