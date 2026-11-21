@@ -1,17 +1,23 @@
 [[plugins]] # denops.vim
 repo = 'vim-denops/denops.vim'
+rev = '121d530'
 
 [[plugins]] # dpp.vim
 repo = 'Shougo/dpp.vim'
+rev = 'f11437c'
 
 [[plugins]] # dpp-protocol-git
 repo = 'Shougo/dpp-protocol-git'
+rev = 'eae8da8'
 
 [[plugins]] # dpp-ext-installer
 repo = 'Shougo/dpp-ext-installer'
+rev = 'f103948'
 
 [[plugins]] # dpp-ext-toml
 repo = 'Shougo/dpp-ext-toml'
+rev = '144020f'
 
 [[plugins]] # dpp-ext-lazy
 repo = 'Shougo/dpp-ext-lazy'
+rev = 'a58972b'

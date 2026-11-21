@@ -1,35 +1,46 @@
 [[plugins]]
 repo = 'Shougo/ddc-around'
+rev = '277b926'
 
 [[plugins]]
 repo = 'Shougo/ddc-matcher_head'
+rev = '7a52b2f'
 
 [[plugins]]
 repo = 'Shougo/ddc-sorter_rank'
+rev = '0d58fe6'
 
 [[plugins]]
 repo = 'Shougo/ddc-ui-pum'
+rev = 'f7f3343'
 
 [[plugins]]
 repo = 'Shougo/pum.vim'
+rev = '16a70a7'
 
 [[plugins]]
 repo = 'LumaKernel/ddc-source-file'
+rev = 'e2386ed'
 
 [[plugins]]
 repo = 'Shougo/ddc-source-cmdline'
+rev = '139f85f'
 
 [[plugins]]
 repo = 'Shougo/ddc-source-cmdline-history'
+rev = 'ffbae40'
 
 [[plugins]]
 repo = 'Shougo/ddc-source-around'
+rev = '277b926'
 
 [[plugins]]
 repo = 'matsui54/ddc-buffer'
+rev = 'bc2416d'
 
 [[plugins]]
 repo = 'Shougo/ddc.vim'
+rev = '5e00c10'
 depends = ['denops.vim']
 hook_source = '''
 call ddc#custom#patch_global('ui', 'pum.vim')
