@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # シェルスクリプトと設定ファイルの文法チェック（Linux）
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: zsh と tmux を入れる
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq zsh tmux
+
+      - name: shellcheck
+        run: shellcheck ./*.sh .github/scripts/*.sh
+
+      - name: .zshrc の文法チェック
+        run: zsh -n .zshrc
+
+      - name: .tmux.conf の文法チェック
+        run: tmux -f /dev/null start-server \; source-file -n .tmux.conf
+
+  # シェルスクリプトと設定ファイルの文法チェック（macOS）
+  # brew bundle で .Brewfile を全部入れると時間がかかりすぎるので、setup.sh は実行しない
+  lint-macos:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: tmux を入れる
+        run: brew install tmux
+
+      - name: シェルスクリプトの文法チェック
+        run: for f in ./*.sh .github/scripts/*.sh; do bash -n "$f"; done
+
+      - name: .zshrc の文法チェック
+        run: zsh -n .zshrc
+
+      - name: .tmux.conf の文法チェック
+        run: tmux -f /dev/null start-server \; source-file -n .tmux.conf
+
+  # Linux のコンテナで setup.sh を実行する
+  setup-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["ubuntu:24.04", "amazonlinux:2023"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: setup.sh を確認する（${{ matrix.image }}）
+        run: docker run --rm -v "$GITHUB_WORKSPACE":/src:ro "${{ matrix.image }}" bash /src/.github/scripts/test-setup-linux.sh
