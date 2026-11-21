@@ -1,17 +1,22 @@
 [[plugins]]
 repo = 'tpope/vim-endwise'
+rev = '4994afb'
 
 [[plugins]]
 repo = 'tomasr/molokai'
+rev = 'c67bdfc'
 
 [[plugins]]
 repo = 'sheerun/vim-polyglot'
+rev = 'f061edd'
 
 [[plugins]]
 repo = 'scrooloose/nerdtree'
+rev = '690d061'
 
 [[plugins]]
 repo = 'jistr/vim-nerdtree-tabs'
+rev = '07d19f0'
 hook_add = ''''
 if argc() == 0
   let g:nerdtree_tabs_open_on_console_startup = 1
@@ -20,9 +25,11 @@ end
 
 [[plugins]]
 repo = 'airblade/vim-gitgutter'
+rev = '90b7520'
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
+rev = '77b4d6e'
 hook_add = '''
 let g:quickrun_config = {
 \   "*" : {
@@ -49,6 +56,7 @@ autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 
 [[plugins]]
 repo = 'thinca/vim-qfhl'
+rev = '2afe716'
 hook_add = '''
 let g:qfhl_startup = 'enable'
 let g:qfhl#multi_loclist = 'keep'
@@ -61,16 +69,20 @@ autocmd QuickFixCmdPost *grep* cwindow
 
 [[plugins]]
 repo = 'Shougo/neosnippet'
+rev = 'efb2a61'
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
+rev = '725c989'
 
 [[plugins]]
 repo = 'Shougo/vimproc'
+rev = '480e04a'
 build = 'make'
 
 [[plugins]]
 repo = 'vim-scripts/javacomplete'
+rev = 'f3d9ce9'
 hook_add ='''
 autocmd FileType java :setlocal omnifunc=javacomplete#Complete
 autocmd FileType java :setlocal completefunc=javacomplete#CompleteParamsInfo
@@ -83,34 +95,22 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 [[plugins]]
 repo = 'tpope/vim-surround'
+rev = '3d188ed'
 
 [[plugins]]
 repo = 'itchyny/lightline.vim'
+rev = '255f61d'
 
 [[plugins]]
 repo = "aklt/plantuml-syntax"
+rev = 'c14231d'
 hook_add = '''
 let g:plantuml_executable_script = "~/dotfiles/plantuml"
 '''
 
 [[plugins]]
 repo = 'w0rp/ale'
-
-[[plugins]]
-repo = 'thoughtbot/vim-rspec'
-
-[[plugins]]
-repo = 'itmammoth/run-rspec.vim'
-hook_source = '''
-let g:run_rspec_bin = 'bundle exec rspec'
-nnoremap <Space>r :RunSpec<CR>
-nnoremap <Space>s :RunSpecLine<CR>
-nnoremap <Space>l :RunSpecLastRun<CR>
-nnoremap <Space>c :RunSpecCloseResult<CR>
-'''
-
-[[plugins]]
-repo = 'mileszs/ack.vim'
+rev = '422c0e8'
 hook_add = '''
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = '-E'
@@ -121,13 +121,35 @@ let g:ale_open_list = 1
 '''
 
 [[plugins]]
+repo = 'thoughtbot/vim-rspec'
+rev = 'c0251b2'
+
+[[plugins]]
+repo = 'itmammoth/run-rspec.vim'
+rev = 'b097b2a'
+hook_source = '''
+let g:run_rspec_bin = 'bundle exec rspec'
+nnoremap <Space>r :RunSpec<CR>
+nnoremap <Space>s :RunSpecLine<CR>
+nnoremap <Space>l :RunSpecLastRun<CR>
+nnoremap <Space>c :RunSpecCloseResult<CR>
+'''
+
+[[plugins]]
+repo = 'mileszs/ack.vim'
+rev = '36e40f9'
+
+[[plugins]]
 repo = 'rking/ag.vim'
+rev = '4a0dd6e'
 
 [[plugins]]
 repo = 'markonm/traces.vim'
+rev = '261602a'
 
 [[plugins]]
 repo = 'nathanaelkane/vim-indent-guides'
+rev = 'a1e1390'
 hook_add = '''
 let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_start_level=2

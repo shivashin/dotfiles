@@ -1,5 +1,6 @@
 [[plugins]]
 repo = 'thinca/vim-qfreplace'
+rev = '707a895'
 hook_add = '''
 function! DduReplace(args)
   let l:items = a:args->get('items')
@@ -27,42 +28,55 @@ endfunction
 
 [[plugins]]
 repo = 'Shougo/ddu-ui-ff'
+rev = '681b969'
 
 [[plugins]]
 repo = 'Shougo/ddu-source-file'
+rev = 'dc1f5b7'
 
 [[plugins]]
 repo = 'Shougo/ddu-source-file_rec'
+rev = 'e4cd38a'
 
 [[plugins]]
 repo = 'Shougo/ddu-source-register'
+rev = 'cb98be5'
 
 [[plugins]]
 repo = 'shun/ddu-source-rg'
+rev = '42b928e'
 
 [[plugins]]
 repo = 'shun/ddu-source-buffer'
+rev = '1238c09'
 
 [[plugins]]
 repo = 'Shougo/ddu-filter-matcher_substring'
+rev = '01eae40'
 
 [[plugins]]
 repo='Shougo/ddu-commands.vim'
+rev = 'fba875e'
 
 [[plugins]]
 repo = 'Shougo/ddu-kind-file'
+rev = '162dcd3'
 
 [[plugins]]
 repo = 'flow6852/ddu-source-qf'
+rev = 'de25925'
 
 [[plugins]]
 repo = 'lambdalisue/mr.vim'
+rev = '2602c0b'
 
 [[plugins]]
 repo = 'kuuote/ddu-source-mr'
+rev = '554ff20'
 
 [[plugins]]
 repo = 'Shougo/ddu.vim'
+rev = 'v11.3.0'
 depends = ['denops.vim']
 on_event = ['BufEnter']
 hook_source = '''

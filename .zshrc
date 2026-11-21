@@ -338,13 +338,13 @@ zplug "mollifier/anyframe", at:4c23cb60
 # e.g., zsh-syntax-highlighting must be loaded
 # after executing compinit command and sourcing other plugins
 # (If the defer tag is given 2 or above, run after compinit command)
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zplug "zsh-users/zsh-syntax-highlighting", at:0.8.0, defer:2
 
 # cmplete
-zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-completions", at:0.36.0
 
 #fish-like autosuggestion
-zplug 'zsh-users/zsh-autosuggestions'
+zplug 'zsh-users/zsh-autosuggestions', at:v0.7.1
 export TERM=xterm-256color
 
 # Install plugins if there are plugins that have not been installed
