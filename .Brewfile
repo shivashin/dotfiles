@@ -186,8 +186,6 @@ brew "vim"
 brew "yarn"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Next-generation plugin manager for zsh
-brew "zplug"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Black box WordPress vulnerability scanner
