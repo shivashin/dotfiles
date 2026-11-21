@@ -16,10 +16,6 @@ brew "zstd"
 brew "ansible", link: false
 # Codec library for encoding and decoding AV1 video streams
 brew "aom"
-# Distributed revision control system
-brew "git"
-# Extendable version manager with support for Ruby, Node.js, Erlang & more
-brew "asdf"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Official Amazon AWS command-line interface
@@ -84,6 +80,8 @@ brew "pango"
 brew "tesseract"
 # Interpreter for PostScript and PDF
 brew "ghostscript"
+# Distributed revision control system
+brew "git"
 # Render markdown on the CLI
 brew "glow"
 # Library to load and enumerate PKCS#11 modules
@@ -104,14 +102,8 @@ brew "librsvg"
 brew "graphviz"
 # GNU Ubiquitous Intelligent Language for Extensions
 brew "guile"
-# Database of common MIME types
-brew "shared-mime-info"
 # ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
 brew "libheif"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.12"
-# Library for reading RAW files from digital photo cameras
-brew "libraw"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
@@ -126,6 +118,8 @@ brew "libevent"
 brew "libmicrohttpd"
 # Postgres C API library
 brew "libpq"
+# Library for reading RAW files from digital photo cameras
+brew "libraw"
 # Reliable Internet Stream Transport (RIST)
 brew "librist"
 # Powerful, lightweight programming language
@@ -138,8 +132,6 @@ brew "mise"
 brew "protobuf"
 # Open source relational database management system
 brew "mysql@8.0"
-# Open-source, cross-platform JavaScript runtime environment
-brew "node"
 # Optimized BLAS library
 brew "openblas"
 # Development kit for the Java programming language
@@ -156,18 +148,6 @@ brew "plantuml"
 brew "postgresql@14"
 # Protocol buffers (Google's data interchange format)
 brew "protobuf@21"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.10"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.11"
-# Tool Command Language
-brew "tcl-tk"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.8", link: false
-# Install various Ruby versions and implementations
-brew "ruby-build"
-# Ruby version manager
-brew "rbenv"
 # Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
 # Persistent key-value database, with built-in net interface
@@ -178,6 +158,8 @@ brew "ripgrep"
 brew "rtmpdump"
 # Rust toolchain installer
 brew "rustup"
+# Database of common MIME types
+brew "shared-mime-info"
 # Source-code syntax highlighter
 brew "source-highlight"
 # SQLite extension providing 256-bit AES encryption
@@ -186,8 +168,8 @@ brew "sqlcipher"
 brew "srt"
 # SWF manipulation and generation tools
 brew "swftools"
-# Terraform version manager inspired by rbenv
-brew "tfenv"
+# Tool Command Language
+brew "tcl-tk"
 # Code-search similar to ack
 brew "the_silver_searcher"
 # Text interface for Git repositories
