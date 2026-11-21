@@ -42,6 +42,9 @@ nnoremap <ESC><ESC> :nohl<CR>
 "auto indent command"
 map <Space>i gg=<S-g><C-o><C-o>zz
 
+"markdown preview with glow (vertical terminal)"
+autocmd FileType markdown nnoremap <buffer> <silent> <Space>p :vertical terminal glow -p %<CR>
+
 "文字コード関連の設定"
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
