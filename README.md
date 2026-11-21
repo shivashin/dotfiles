@@ -52,7 +52,10 @@ git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
 - tmux を起動して `prefix + I`（大文字の I）を押し、tpm のプラグインを入れる。
 - Vim を起動すると dpp の状態ファイルが作られる。プラグインは `:call dpp#async_ext_action('installer', 'install')` で入れる。
 
-`.zshrc` と `.tmux.conf` には、まだ macOS 専用の設定が残っている（`/opt/homebrew` のパス、`gdircolors`、`reattach-to-user-namespace pbcopy`）。Linux では zsh の起動時にエラーが出たり、tmux のコピーが効かなかったりする。
+`.zshrc` と `.tmux.conf` は OS を判定して設定を切り替える。
+
+- `.zshrc`: Homebrew、mysql のパス、`LESSOPEN` は macOS のときだけ設定する。`LANG` は `ja_JP.UTF-8` があればそれを、なければ `C.UTF-8` を使う。
+- `.tmux.conf`: コピーモードでコピーした内容を、macOS では `pbcopy` に渡す。Linux では OSC 52（端末にクリップボードの操作を頼むエスケープシーケンス）で外側のターミナルに送るので、SSH 先の tmux でコピーしても手元の Mac のクリップボードに入る。iTerm2 では、設定の General > Selection にある「Applications in terminal may access clipboard」を有効にする。
 
 ## パッケージ管理の方針
 
