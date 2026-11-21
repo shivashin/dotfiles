@@ -4,3 +4,5 @@ ln -sf ~/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/.latexmkrc ~/.latexmkrc
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
+mkdir -p ~/.config/mise
+ln -sf ~/dotfiles/mise/config.toml ~/.config/mise/config.toml

@@ -1,0 +1,10 @@
+# グローバル（プロジェクト外）で使うデフォルトのバージョン
+# プロジェクトごとのバージョンは各リポジトリの mise.toml / .tool-versions / .ruby-version などで指定する
+[tools]
+ruby = "4.0"
+node = "24"
+python = "3.13"
+
+[settings]
+# .ruby-version / .node-version / .python-version も mise で読む
+idiomatic_version_file_enable_tools = ["ruby", "node", "python"]
