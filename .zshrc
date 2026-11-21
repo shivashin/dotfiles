@@ -395,9 +395,8 @@ zle -N fzf-cdr
 setopt noflowcontrol
 bindkey '^q' fzf-cdr
 
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+# Rancher Desktop（docker / kubectl など）。Rancher Desktop の PATH 管理は手動にしている
 export PATH="$HOME/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 export PATH=~/.npm-global/bin:$PATH
 
 
