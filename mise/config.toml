@@ -4,7 +4,8 @@
 ruby = "4.0"
 node = "24"
 python = "3.13"
+terraform = "1.15"
 
 [settings]
-# .ruby-version / .node-version / .python-version も mise で読む
-idiomatic_version_file_enable_tools = ["ruby", "node", "python"]
+# .ruby-version / .node-version / .python-version / .terraform-version も mise で読む
+idiomatic_version_file_enable_tools = ["ruby", "node", "python", "terraform"]
