@@ -145,6 +145,6 @@ tmux のセッションは、tmux-resurrect と tmux-continuum で自動的に�
 
 ## 既知の注意点
 
-- Rancher Desktop は、`.zshrc` の `MANAGED BY RANCHER DESKTOP` ブロックを書き換えることがある。`$HOME/.rd/bin` が `/Users/<ユーザー名>/.rd/bin` に戻っていたら、コミット前に直す。Rancher Desktop の設定で PATH の管理を手動にすると（`rdctl set --application.path-management-strategy manual`）、書き換えられなくなる。その場合も、`.zshrc` の `$HOME/.rd/bin` の行は残しておく。
+- Rancher Desktop の PATH 管理は手動にしている（`rdctl set --application.path-management-strategy manual`）。`~/.rd/bin` は `.zshrc` で自分で PATH に入れている。自動（`rcfiles`）に戻すと、Rancher Desktop が `.zshrc` に管理ブロックを書き込み、`$HOME` を絶対パスに書き換えるので注意する。
 - onelogin-aws-cli 0.1.19 は、新しい setuptools から消えた `pkg_resources` を使う。そのため `mise/config.toml` で `setuptools<81` を一緒に入れている。実行時に出る `pkg_resources is deprecated` の警告は無視してよい。
-- Homebrew の `zplug` も `.Brewfile` に入っているが、`.zshrc` が読み込むのは `~/.zplug` に clone したもの。
+- zplug は Homebrew では入れず、`~/.zplug` に clone したものを使う（`setup.sh` が clone する）。
