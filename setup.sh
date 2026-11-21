@@ -28,8 +28,7 @@ cd fonts
 fc-cache -vf
 ## After this section, you need to modify terminal font
 
-if [ "$OSTYPE" == "darwin"* ]; then
-  cp .Brewfile ~
-  mv .Brewfile Brewfile
-  brew bundle
+if [[ "$OSTYPE" == darwin* ]]; then
+  ln -sf ~/dotfiles/.Brewfile ~/.Brewfile
+  brew bundle --global
 fi
