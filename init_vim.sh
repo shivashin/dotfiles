@@ -1,15 +1,9 @@
-mkdir -p ~/.cache/dpp/repos/github.com/
-cd ~/.cache/dpp/repos/github.com/
+#!/usr/bin/env bash
+# dpp.vim と denops.vim の本体を ~/.cache/dpp に clone する。すでにあるものはスキップする
+set -euo pipefail
 
-directories=(
-  "Shougo"
-  "vim-denops"
-)
-for directory in "${directories[@]}" ; do
-  mkdir -p ${directory}
-done
+base="$HOME/.cache/dpp/repos/github.com"
 
-cd ./Shougo
 shougo_items=(
   "dpp.vim"
   "dpp-ext-installer"
@@ -18,13 +12,14 @@ shougo_items=(
   "dpp-ext-toml"
 )
 
-for item in "${shougo_items[@]}" ; do
-  if [ ! -d ${item} ]; then
-    git clone https://github.com/Shougo/${item}
+mkdir -p "$base/Shougo" "$base/vim-denops"
+
+for item in "${shougo_items[@]}"; do
+  if [ ! -d "$base/Shougo/$item" ]; then
+    git clone "https://github.com/Shougo/$item" "$base/Shougo/$item"
   fi
 done
 
-cd ../vim-denops
-if [ ! -d denops.vim ]; then
-  git clone https://github.com/vim-denops/denops.vim
+if [ ! -d "$base/vim-denops/denops.vim" ]; then
+  git clone https://github.com/vim-denops/denops.vim "$base/vim-denops/denops.vim"
 fi
