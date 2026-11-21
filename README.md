@@ -1,6 +1,6 @@
 # dotfiles
 
-macOS（Apple Silicon）向けの個人用設定ファイル。zsh / tmux / Vim / Git の設定と、Homebrew と mise で入れるツールの一覧を管理する。
+macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定ファイル。zsh / tmux / Vim / Git の設定と、Homebrew と mise で入れるツールの一覧を管理する。
 
 ## ファイル構成
 
@@ -12,45 +12,47 @@ macOS（Apple Silicon）向けの個人用設定ファイル。zsh / tmux / Vim 
 | `.gitconfig` / `.gitconfig.dotfiles` | Git の設定。dotfiles リポジトリでだけ個人用の名前とアドレスを使う | `~/.gitconfig` |
 | `.Brewfile` | Homebrew で入れるパッケージの一覧 | `~/.Brewfile` |
 | `mise/config.toml` | mise のグローバル設定（言語ランタイムと CLI のデフォルトバージョン） | `~/.config/mise/config.toml` |
+| `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
 | `.latexmkrc` | latexmk の設定 | `~/.latexmkrc` |
-| `dotfileslink.sh` | 上の表のシンボリックリンクをまとめて張る | |
-| `init_vim.sh` | dpp.vim と denops.vim の本体を `~/.cache/dpp` に clone する | |
+| `setup.sh` | セットアップ全体を行う。OS を判定して必要なものを入れる | |
+| `dotfileslink.sh` | 上の表のシンボリックリンクをまとめて張る（`setup.sh` から呼ばれる） | |
+| `init_vim.sh` | dpp.vim と denops.vim の本体を `~/.cache/dpp` に clone する（`setup.sh` から呼ばれる） | |
 | `tmux-new-session-fzf.sh` | tmux の `prefix + N` で使う、zoxide の履歴からディレクトリを選んで window / pane を開くスクリプト | |
 | `update_vim_plugin_versions.sh` | `tomls/` の Vim プラグインのリビジョンを、安全性チェック付きで更新する | |
 | `update_zplug_versions.sh` | `.zshrc` の zplug プラグインのタグを更新する | |
 | `plantuml` | PlantUML で PNG を作って開くラッパー | |
 
-`setup.sh`、`git.sh`、`zsh.sh`、`install.sh` は古いセットアップ用スクリプト。neobundle や apt 前提の処理が残っていて、そのままでは動かない部分があるので、新しい環境では下の手順を使う。
-
-## 新しい Mac のセットアップ
+## セットアップ
 
 ```sh
-# 1. Homebrew を入れる（https://brew.sh）
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# 2. dotfiles を clone してリンクを張る
-git clone git@github.com:shivashin/dotfiles.git ~/dotfiles
-~/dotfiles/dotfileslink.sh
-
-# 3. Homebrew のパッケージを入れる
-brew bundle --global
-
-# 4. mise でランタイムと CLI を入れる
-mise trust ~/dotfiles/mise/config.toml
-mise install
-
-# 5. zsh / tmux / Vim のプラグインマネージャを入れる
-git clone https://github.com/zplug/zplug ~/.zplug
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-~/dotfiles/init_vim.sh
+git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
+~/dotfiles/setup.sh
 ```
 
-その後の手順:
+`setup.sh` は OS を判定して、次の処理を行う。何度実行してもよく、すでに入っているものはスキップする。
 
+| 手順 | macOS | Linux（apt / dnf） |
+|---|---|---|
+| パッケージ | Homebrew を入れ、`brew bundle --global --no-upgrade` で `.Brewfile` のものを入れる | apt / dnf で git, zsh, tmux, vim, tree などを入れる |
+| シンボリックリンク | `dotfileslink.sh` | `dotfileslink.sh`（`mise/linux.toml` もリンクする） |
+| mise | Homebrew で入る | 公式のインストーラ（`https://mise.run`）で `~/.local/bin` に入れる |
+| ランタイムと CLI | `mise install` | `mise install`（fzf, ripgrep, zoxide, uv, deno も入る） |
+| zplug / tpm / dpp.vim | clone する | clone する |
+| Powerline フォント | 入れる | 入れない（手元のターミナル側で必要なもの） |
+
+- dotfiles は `~/dotfiles` に clone する必要がある。ほかの場所だと `setup.sh` はエラーで止まる。
+- Linux では、root 以外で実行すると sudo を使う。
+- Amazon Linux 2023 は `curl-minimal` が入っていて、`curl` を入れると衝突するので、`curl` コマンドがあれば入れない。
+- 動作確認は macOS、Ubuntu 24.04、Amazon Linux 2023 で行った。
+
+実行後の手順:
+
+- ログインシェルを zsh に変える（`chsh -s "$(command -v zsh)"`）。`setup.sh` が必要なときに表示する。
 - zsh を起動すると、zplug が足りないプラグインを入れるか聞いてくるので `y` を押す。
 - tmux を起動して `prefix + I`（大文字の I）を押し、tpm のプラグインを入れる。
 - Vim を起動すると dpp の状態ファイルが作られる。プラグインは `:call dpp#async_ext_action('installer', 'install')` で入れる。
+
+`.zshrc` と `.tmux.conf` には、まだ macOS 専用の設定が残っている（`/opt/homebrew` のパス、`gdircolors`、`reattach-to-user-namespace pbcopy`）。Linux では zsh の起動時にエラーが出たり、tmux のコピーが効かなかったりする。
 
 ## パッケージ管理の方針
 
@@ -140,6 +142,6 @@ tmux のセッションは、tmux-resurrect と tmux-continuum で自動的に�
 
 ## 既知の注意点
 
-- Rancher Desktop は、`.zshrc` の `MANAGED BY RANCHER DESKTOP` ブロックを書き換えることがある。`$HOME/.rd/bin` が `/Users/<ユーザー名>/.rd/bin` に戻っていたら、コミット前に直す。
+- Rancher Desktop は、`.zshrc` の `MANAGED BY RANCHER DESKTOP` ブロックを書き換えることがある。`$HOME/.rd/bin` が `/Users/<ユーザー名>/.rd/bin` に戻っていたら、コミット前に直す。Rancher Desktop の設定で PATH の管理を手動にすると（`rdctl set --application.path-management-strategy manual`）、書き換えられなくなる。その場合も、`.zshrc` の `$HOME/.rd/bin` の行は残しておく。
 - onelogin-aws-cli 0.1.19 は、新しい setuptools から消えた `pkg_resources` を使う。そのため `mise/config.toml` で `setuptools<81` を一緒に入れている。実行時に出る `pkg_resources is deprecated` の警告は無視してよい。
 - Homebrew の `zplug` も `.Brewfile` に入っているが、`.zshrc` が読み込むのは `~/.zplug` に clone したもの。
