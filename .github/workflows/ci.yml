@@ -58,6 +58,10 @@ jobs:
       - name: .tmux.conf の文法チェック
         run: tmux -f /dev/null start-server \; source-file -n .tmux.conf
 
+      # インストールはせず、.Brewfile の中身が Homebrew でまだ配布されているかだけを調べる
+      - name: .Brewfile の確認
+        run: .github/scripts/check-brewfile.sh .Brewfile
+
   # コミットに秘密情報が含まれていないかを調べる
   gitleaks:
     runs-on: ubuntu-latest
