@@ -20,14 +20,13 @@ elif (( $+commands[dircolors] )); then
   eval "$(dircolors -b)"
 fi
 export ZLS_COLORS=$LS_COLORS
-zstyle ':completion:*:default' menu select=2
+## zsh 標準の補完メニューは使わず、fzf-tab（sheldon/plugins.toml）で候補を選ぶ
+zstyle ':completion:*' menu no
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
 zstyle ':completion:*:messages' format '%F{YELLOW}%d'$DEFAULT
 zstyle ':completion:*:warnings' format '%F{RED}No matches for:''%F{YELLOW} %d'$DEFAULT
-zstyle ':completion:*:descriptions' format '%F{YELLOW}completing %B%d%b'$DEFAULT
 zstyle ':completion:*:options' description 'yes'
-zstyle ':completion:*:descriptions' format '%F{yellow}Completing %B%d%b%f'$DEFAULT
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' list-separator '-->'
 zstyle ':completion:*:manuals' separate-sections true
@@ -38,3 +37,13 @@ setopt list_types
 setopt list_packed
 ## 補完で小文字でも大文字でもマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+## fzf-tab
+## fzf-tab は色付きの見出しを使えないので、グループの見出しは装飾なしにする
+zstyle ':completion:*:descriptions' format '[%d]'
+## git checkout の候補（ブランチなど）は並べ替えない
+zstyle ':completion:*:git-checkout:*' sort false
+## cd の候補では、ディレクトリの中身をプレビューする
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
+## < と > で候補のグループ（ファイル、オプションなど）を切り替える
+zstyle ':fzf-tab:*' switch-group '<' '>'

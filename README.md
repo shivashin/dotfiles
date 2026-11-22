@@ -121,7 +121,16 @@ brew bundle cleanup --global         # .Brewfile にないものを表示する�
 | `60-plugins.zsh` | sheldon でプラグインを読み込む |
 | `70-tools.zsh` | fzf のキーバインド、cdr、Rancher Desktop と npm の PATH、zoxide |
 
-プラグインは `sheldon/plugins.toml` に書いた順に読み込む。zsh-completions のあとで `compinit` を実行し、zsh-syntax-highlighting は最後に読み込む。
+プラグインは `sheldon/plugins.toml` に書いた順に読み込む。
+
+| プラグイン | 内容 |
+|---|---|
+| zsh-completions | zsh 標準にないコマンドの補完の定義を足す。このあとで `compinit` を実行する |
+| fzf-tab | Tab 補完の候補を fzf で選ぶ。`compinit` のあと、zsh-autosuggestions より前に読み込む必要がある |
+| anyframe | fzf などで履歴やディレクトリを選ぶための部品（今はキーに割り当てていない） |
+| zsh-autosuggestions | 過去に打ったコマンドを、入力中に灰色の候補として出す。`→` で確定する |
+| zsh-syntax-highlighting | 入力中のコマンドに色を付ける（存在するコマンドは緑、存在しないものは赤） |
+| zsh-history-substring-search | 入力した文字を含む履歴をたどる。zsh-syntax-highlighting のあとに読み込む必要がある |
 
 ## Git
 
@@ -137,6 +146,8 @@ brew bundle cleanup --global         # .Brewfile にないものを表示する�
 |---|---|
 | `Ctrl-r` | fzf でコマンド履歴を検索する |
 | `Ctrl-q` | fzf で最近移動したディレクトリを選んで `cd` する |
+| `Tab` | 補完の候補を fzf で選ぶ（fzf-tab）。`<` / `>` で候補のグループを切り替える。`cd` ではディレクトリの中身をプレビューする |
+| `↑` / `↓`（ノーマルモードでは `k` / `j`） | 入力した文字を含む履歴をたどる（zsh-history-substring-search） |
 
 ### tmux（prefix は `Ctrl-a`）
 

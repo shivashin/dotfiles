@@ -10,6 +10,11 @@ tag = "0.36.0"
 [plugins.compinit]
 inline = "autoload -Uz compinit && compinit"
 
+# Tab 補完の候補を fzf で選ぶ。compinit のあとで、ウィジェットを包むプラグイン（autosuggestions など）より前に読み込む
+[plugins.fzf-tab]
+github = "Aloxaf/fzf-tab"
+tag = "v1.3.0"
+
 [plugins.anyframe]
 github = "mollifier/anyframe"
 rev = "4c23cb60aa9654cff6212fb01dce6d8028993bad"
@@ -22,3 +27,9 @@ tag = "v0.7.1"
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
 tag = "0.8.0"
+
+# 入力した文字を含む履歴を ↑ / ↓ でたどる。zsh-syntax-highlighting のあとに読み込む
+# キーの割り当ては zsh/60-plugins.zsh
+[plugins.zsh-history-substring-search]
+github = "zsh-users/zsh-history-substring-search"
+tag = "v1.1.0"

@@ -9,6 +9,8 @@ plugins=(
   "zsh-users/zsh-syntax-highlighting"
   "zsh-users/zsh-completions"
   "zsh-users/zsh-autosuggestions"
+  "zsh-users/zsh-history-substring-search"
+  "Aloxaf/fzf-tab"
 )
 
 now=$(date +%s)
