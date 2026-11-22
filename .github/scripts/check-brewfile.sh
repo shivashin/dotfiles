@@ -29,6 +29,16 @@ for tap in "${LIST[@]+"${LIST[@]}"}"; do
   fi
 done
 
+# 公式以外の tap の formula / cask は、信頼済みにしないと Homebrew が読み込まない。
+# brew bundle と同じく、.Brewfile で trusted: true を付けたものだけを信頼済みにする
+while IFS= read -r line; do
+  if [[ "$line" =~ ^(brew|cask)\ \"([^\"]+)\".*trusted:\ true ]]; then
+    kind=formula
+    [ "${BASH_REMATCH[1]}" = cask ] && kind=cask
+    brew trust "--$kind" "${BASH_REMATCH[2]}" >/dev/null
+  fi
+done <"$brewfile"
+
 check() {
   local kind="$1" name
   list "$kind"
@@ -38,8 +48,8 @@ check() {
   if ! brew info --json=v2 "--$kind" "${LIST[@]}" >"$tmp/info.json" 2>/dev/null; then
     # 見つからないものがあると brew info 全体が失敗するので、1 つずつ調べ直して特定する
     for name in "${LIST[@]}"; do
-      if ! brew info --json=v2 "--$kind" "$name" >/dev/null 2>&1; then
-        echo "::error::見つかりません（${kind}）: $name"
+      if ! brew info --json=v2 "--$kind" "$name" >/dev/null 2>"$tmp/err"; then
+        echo "::error::読み込めません（${kind}）: $name: $(grep -m1 '^Error:' "$tmp/err" | sed 's/^Error: //')"
         status=1
       fi
     done
