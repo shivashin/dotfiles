@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # workflow で commit SHA に固定している action を更新する
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # 公開されてすぐのバージョンは取り込まない（乗っ取られたリリースを避けるため）
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
