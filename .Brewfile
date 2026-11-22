@@ -154,6 +154,8 @@ brew "ripgrep"
 brew "rtmpdump"
 # Rust toolchain installer
 brew "rustup"
+# Fast, configurable, shell plugin manager
+brew "sheldon"
 # Database of common MIME types
 brew "shared-mime-info"
 # Source-code syntax highlighter

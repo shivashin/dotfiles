@@ -10,3 +10,5 @@ uv = "latest"
 deno = "latest"
 # .githooks/pre-commit で秘密情報を調べるのに使う
 gitleaks = "latest"
+# zsh のプラグインマネージャ（sheldon/plugins.toml）
+sheldon = "latest"

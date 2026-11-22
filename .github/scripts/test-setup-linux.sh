@@ -35,11 +35,6 @@ for i in 1 2; do
   echo "::endgroup::"
 done
 
-echo "::group::zplug のプラグインを入れる"
-# .zshrc の中の「入れますか？」の確認は、端末がないので「いいえ」になる。そのあとで zplug install を実行する
-run_as_user 'zsh -i -c "zplug install" </dev/null'
-echo "::endgroup::"
-
 echo "::group::zsh の起動"
 # 対話シェルとして起動し、標準エラー出力に何も出ないことを確認する
 run_as_user 'cd ~ && zsh -i -c "exit 0" </dev/null 2>/tmp/zsh.err >/dev/null'
@@ -60,7 +55,7 @@ echo "::group::mise で入れたツール"
 # shellcheck disable=SC2016
 run_as_user 'cd ~ && zsh -i -c "
   set -e
-  for c in mise fzf rg zoxide uv deno gitleaks ruby node python3 terraform cfn-lint onelogin-aws-login; do
+  for c in mise fzf rg zoxide uv deno gitleaks sheldon ruby node python3 terraform cfn-lint onelogin-aws-login; do
     printf \"%-20s %s\n\" \$c \"\$(command -v \$c)\"
   done
   terraform version | head -1

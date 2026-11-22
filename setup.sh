@@ -97,8 +97,9 @@ setup_common() {
   have uv || mise install uv
   mise install
 
-  log "zplug"
-  clone_if_missing https://github.com/zplug/zplug "$HOME/.zplug"
+  log "zsh のプラグイン（sheldon）"
+  # sheldon は macOS では Homebrew、Linux では mise で入る。mise exec を通すとどちらでも見つかる
+  mise exec -- sheldon lock
 
   log "tmux のプラグインマネージャ（tpm）"
   clone_if_missing https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
@@ -124,7 +125,6 @@ setup_common() {
 
   echo
   echo "残りの手順:"
-  echo "  - zsh を起動し、zplug のプラグインを入れるか聞かれたら y を押す"
   echo "  - tmux を起動し、prefix（Ctrl-a）+ I で tpm のプラグインを入れる"
   echo "  - Vim で :call dpp#async_ext_action('installer', 'install') を実行する"
 }
