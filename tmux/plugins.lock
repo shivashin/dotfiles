@@ -1,0 +1,11 @@
+# tmux のプラグインと、固定するコミット。tmux-plugins.sh がこのとおりに ~/.tmux/plugins に入れる。
+# .tmux.conf の @tpm_plugins と同じものを書く（CI で一致を確認する）。
+# 更新は ~/dotfiles/tmux-plugins.sh update で行う。
+tmux-plugins/tpm 99469c4a9b1ccf77fade25842dc7bafbc8ce9946
+tmux-plugins/tmux-sensible 25cb91f42d020f675bb0a2ce3fbd3a5d96119efa
+tmux-plugins/tmux-yank acfd36e4fcba99f8310a7dfb432111c242fe7392
+tmux-plugins/tmux-open 763d0a852e6703ce0f5090a508330012a7e6788e
+tmux-plugins/tmux-resurrect cff343cf9e81983d3da0c8562b01616f12e8d548
+tmux-plugins/tmux-continuum 3e4bc35da41f956c873aea716c97555bf1afce5d
+wfxr/tmux-fzf-url 7c4838e95fde660b7f2aaf514323ac8498e0d4f4
+sainnhe/tmux-fzf ad64bb663096d497a8500469ecc64e9598058242
