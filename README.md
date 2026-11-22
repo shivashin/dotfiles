@@ -12,7 +12,7 @@ macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定フ�
 | `.gitconfig` / `.gitconfig.dotfiles` | Git の設定。dotfiles リポジトリでだけ個人用の名前とアドレスを使う | `~/.gitconfig` |
 | `.Brewfile` | Homebrew で入れるパッケージの一覧 | `~/.Brewfile` |
 | `mise/config.toml` | mise のグローバル設定（言語ランタイムと CLI のデフォルトバージョン） | `~/.config/mise/config.toml` |
-| `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
+| `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno, gitleaks） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
 | `.latexmkrc` | latexmk の設定 | `~/.latexmkrc` |
 | `setup.sh` | セットアップ全体を行う。OS を判定して必要なものを入れる | |
 | `dotfileslink.sh` | 上の表のシンボリックリンクをまとめて張る（`setup.sh` から呼ばれる） | |
@@ -21,6 +21,7 @@ macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定フ�
 | `update_vim_plugin_versions.sh` | `tomls/` の Vim プラグインのリビジョンを、安全性チェック付きで更新する | |
 | `update_zplug_versions.sh` | `.zshrc` の zplug プラグインのタグを更新する | |
 | `plantuml` | PlantUML で PNG を作って開くラッパー | |
+| `.githooks/pre-commit` | コミットする変更に秘密情報がないかを gitleaks で調べる | `setup.sh` が `core.hooksPath` に設定する |
 
 ## セットアップ
 
@@ -151,6 +152,7 @@ GitHub Actions（`.github/workflows/ci.yml`）で、PR と `master` への push 
 |---|---|
 | `lint` | Linux で shellcheck、`zsh -n .zshrc`、tmux による `.tmux.conf` の文法チェック |
 | `lint-macos` | macOS で `bash -n`、`zsh -n .zshrc`、`.tmux.conf` の文法チェック |
+| `gitleaks` | 履歴全体に秘密情報（アクセスキー、トークン、秘密鍵など）がないかを調べる |
 | `setup-linux` | Ubuntu 24.04 と Amazon Linux 2023 のコンテナで `setup.sh` を 2 回実行し、zsh と tmux がエラーなく起動すること、mise で入れたツールが使えることを確認する |
 
 macOS では `setup.sh` を実行しない。`.Brewfile` の cask まで全部入れると時間がかかりすぎるため。
@@ -163,6 +165,29 @@ docker run --rm -v "$PWD":/src:ro amazonlinux:2023 bash /src/.github/scripts/tes
 ```
 
 Rancher Desktop の VM からは macOS の `/tmp` が見えないので、マウントするディレクトリはホーム配下に置く。
+
+workflow で使う action は commit SHA で固定している。Dependabot（`.github/dependabot.yml`）が毎週、新しいバージョンへ上げる PR を作る。公開から 7 日たっていないバージョンは対象にしない。
+
+## 秘密情報のチェック
+
+公開リポジトリなので、秘密情報は push する前に止める。
+
+- `setup.sh` が `git config core.hooksPath .githooks` を設定し、コミットのたびに `.githooks/pre-commit` が gitleaks で、コミットする変更を調べる。見つかるとコミットが止まる。
+- gitleaks の標準のルールに加えて、`~/.config/gitleaks/dotfiles-private.toml` があれば、そのルールでも調べる。会社名やアカウント ID のように、公開リポジトリに書きたくない文字列はこのファイルに書く。このファイルは dotfiles に入れない。
+- 誤検出でコミットを止められたときは、内容を確認してから `git commit --no-verify` で通す。
+- CI の `gitleaks` ジョブは標準のルールだけで調べる。手元のルールは CI では使えない。
+
+手元のルールファイルの例:
+
+```toml
+[[rules]]
+id = "company-identifier"
+regex = '''(?i)(?:^|[^a-z])(会社名|プロジェクト名)(?:[^a-z]|$)'''
+
+[[rules]]
+id = "aws-account-id"
+regex = '''\b[0-9]{12}\b'''
+```
 
 ## 既知の注意点
 
