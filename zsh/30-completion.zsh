@@ -1,10 +1,7 @@
 ############
 # 補間関連
 ############
-fpath=(~/.zsh/completion $fpath)
-## 補完機能の有効
-autoload -U compinit
-compinit
+## compinit は sheldon（sheldon/plugins.toml）で、zsh-completions を読み込んだあとに実行する
 
 ## TAB で順に補完候補を切り替える
 setopt auto_menu

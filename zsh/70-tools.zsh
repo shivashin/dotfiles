@@ -1,7 +1,4 @@
-# mise / fzf / cdr / zoxide
-
-# 言語ランタイム（ruby / node / python など）は mise で管理する
-eval "$(mise activate zsh)"
+# fzf / cdr / zoxide
 
 
 # fzf history
@@ -35,7 +32,7 @@ zle -N fzf-cdr
 setopt noflowcontrol
 bindkey '^q' fzf-cdr
 
-# mise より優先させるため、mise の有効化のあとで PATH の先頭に足す
+# mise（00-env.zsh で有効化）より優先させるため、ここで PATH の先頭に足す
 # Rancher Desktop（docker / kubectl など）。Rancher Desktop の PATH 管理は手動にしている
 export PATH="$HOME/.rd/bin:$PATH"
 export PATH=~/.npm-global/bin:$PATH

@@ -30,6 +30,7 @@ link .tmux.conf "$HOME/.tmux.conf"
 link .latexmkrc "$HOME/.latexmkrc"
 link .gitconfig "$HOME/.gitconfig"
 link .Brewfile "$HOME/.Brewfile"
+link sheldon/plugins.toml "$HOME/.config/sheldon/plugins.toml"
 link mise/config.toml "$HOME/.config/mise/config.toml"
 if [ "$(uname -s)" = "Linux" ]; then
   link mise/linux.toml "$HOME/.config/mise/conf.d/linux.toml"

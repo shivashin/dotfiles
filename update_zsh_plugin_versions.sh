@@ -1,9 +1,9 @@
 #!/bin/bash
-# zplug プラグインの最新タグを確認し、.zshrc を更新するスクリプト
+# zsh プラグインの最新タグを確認し、sheldon/plugins.toml の tag を更新するスクリプト
 # リリースからMIN_AGE_DAYS日以上経過したタグのみ対象とする
 
 MIN_AGE_DAYS=${1:-30}
-ZSHRC="$HOME/dotfiles/.zshrc"
+PLUGINS_TOML="$HOME/dotfiles/sheldon/plugins.toml"
 
 plugins=(
   "zsh-users/zsh-syntax-highlighting"
@@ -61,16 +61,20 @@ for repo in "${plugins[@]}"; do
     continue
   fi
 
-  current=$(grep "$repo" "$ZSHRC" | sed -n 's/.*at:\([^, ]*\).*/\1/p')
+  # github = "<repo>" の行のあとにある、最初の tag = "..." を対象にする
+  current=$(awk -v repo="github = \"${repo}\"" '$0 == repo {found=1; next} found && /^tag = / {gsub(/^tag = "|"$/, ""); print; exit}' "$PLUGINS_TOML")
 
-  if [[ "$latest" != "$current" ]]; then
+  if [[ -z "$current" ]]; then
+    echo "[$repo] not found in $PLUGINS_TOML"
+  elif [[ "$latest" != "$current" ]]; then
     echo "[$repo] updating: $current -> $latest"
-    sed -i.bak "s|\(${repo}.*at:\)[^,[:space:]]*|\1${latest}|" "$ZSHRC"
+    sed -i.bak "\|^github = \"${repo}\"\$|,\|^tag = |s|^tag = \".*\"\$|tag = \"${latest}\"|" "$PLUGINS_TOML"
   else
     echo "[$repo] $current (up to date)"
   fi
 done
 
-rm -f "${ZSHRC}.bak"
+rm -f "${PLUGINS_TOML}.bak"
 echo ""
-echo "Done. Review changes: git diff .zshrc"
+echo "Done. Review changes: git diff sheldon/plugins.toml"
+echo "Then run: sheldon lock --update"

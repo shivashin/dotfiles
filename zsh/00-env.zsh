@@ -31,3 +31,6 @@ export ENABLE_BOOTSNAP=1
 export DISABLE_SPRING=1
 ## 256 色を使う
 export TERM=xterm-256color
+
+# 言語ランタイム（ruby / node / python など）と、Linux で mise から入れる CLI（sheldon など）を使えるようにする
+eval "$(mise activate zsh)"

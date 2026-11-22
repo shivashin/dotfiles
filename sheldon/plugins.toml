@@ -1,0 +1,24 @@
+# zsh のプラグイン（sheldon）。~/.config/sheldon/plugins.toml にリンクされる。
+# 上から順に読み込む。バージョンは update_zsh_plugin_versions.sh で更新する。
+shell = "zsh"
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+tag = "0.36.0"
+
+# zsh-completions（読み込むと src/ が fpath に入る）のあとで compinit する
+[plugins.compinit]
+inline = "autoload -Uz compinit && compinit"
+
+[plugins.anyframe]
+github = "mollifier/anyframe"
+rev = "4c23cb60aa9654cff6212fb01dce6d8028993bad"
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+tag = "v0.7.1"
+
+# ほかのプラグインと compinit のあとに読み込む必要がある
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
+tag = "0.8.0"
