@@ -151,7 +151,8 @@ GitHub Actions（`.github/workflows/ci.yml`）で、PR と `master` への push 
 | ジョブ | 内容 |
 |---|---|
 | `lint` | Linux で shellcheck、`zsh -n .zshrc`、tmux による `.tmux.conf` の文法チェック |
-| `lint-macos` | macOS で `bash -n`、`zsh -n .zshrc`、`.tmux.conf` の文法チェック |
+| `lint-macos` | macOS で `bash -n`、`zsh -n .zshrc`、`.tmux.conf` の文法チェック。`.Brewfile` の tap / formula / cask が Homebrew でまだ配布されているかも調べる（インストールはしない） |
+| `actions-lint` | actionlint で workflow の文法を、zizmor で workflow のセキュリティ（権限の与えすぎ、`${{ }}` の埋め込みによるコマンドの注入など）を調べる |
 | `gitleaks` | 履歴全体に秘密情報（アクセスキー、トークン、秘密鍵など）がないかを調べる |
 | `setup-linux` | Ubuntu 24.04 と Amazon Linux 2023 のコンテナで `setup.sh` を 2 回実行し、zsh と tmux がエラーなく起動すること、mise で入れたツールが使えることを確認する |
 
@@ -167,6 +168,10 @@ docker run --rm -v "$PWD":/src:ro amazonlinux:2023 bash /src/.github/scripts/tes
 Rancher Desktop の VM からは macOS の `/tmp` が見えないので、マウントするディレクトリはホーム配下に置く。
 
 workflow で使う action は commit SHA で固定している。Dependabot（`.github/dependabot.yml`）が毎週、新しいバージョンへ上げる PR を作る。公開から 7 日たっていないバージョンは対象にしない。
+
+actionlint は GitHub Action として配布されていないので、Dependabot では上がらない。`ci.yml` の `ACTIONLINT_VERSION` と `ACTIONLINT_SHA256`（リリースの `actionlint_<version>_checksums.txt` にある `linux_amd64` の値）を手で更新する。
+
+`.Brewfile` の確認は手元でも実行できる（`.github/scripts/check-brewfile.sh .Brewfile`）。非推奨（deprecated）の formula は警告だけで、無効（disabled）になったものや見つからないものがあると失敗する。
 
 ## 秘密情報のチェック
 
