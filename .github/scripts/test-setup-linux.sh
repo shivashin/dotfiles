@@ -60,13 +60,17 @@ echo "::group::mise で入れたツール"
 # shellcheck disable=SC2016
 run_as_user 'cd ~ && zsh -i -c "
   set -e
-  for c in mise fzf rg zoxide uv deno ruby node python3 terraform cfn-lint onelogin-aws-login; do
+  for c in mise fzf rg zoxide uv deno gitleaks ruby node python3 terraform cfn-lint onelogin-aws-login; do
     printf \"%-20s %s\n\" \$c \"\$(command -v \$c)\"
   done
   terraform version | head -1
   cfn-lint --version
   onelogin-aws-login --help >/dev/null 2>&1
 " </dev/null 2>/dev/null'
+echo "::endgroup::"
+
+echo "::group::Git フック"
+run_as_user 'git -C ~/dotfiles config core.hooksPath | grep -qx .githooks && echo "core.hooksPath=.githooks"'
 echo "::endgroup::"
 
 echo "すべての確認が通りました"

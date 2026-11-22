@@ -8,3 +8,5 @@ zoxide = "latest"
 uv = "latest"
 # Vim の denops.vim が使う
 deno = "latest"
+# .githooks/pre-commit で秘密情報を調べるのに使う
+gitleaks = "latest"

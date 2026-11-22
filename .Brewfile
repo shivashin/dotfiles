@@ -84,6 +84,8 @@ brew "ghostscript"
 brew "git"
 # Render markdown on the CLI
 brew "glow"
+# Audit git repos for secrets
+brew "gitleaks"
 # Library to load and enumerate PKCS#11 modules
 brew "p11-kit"
 # GNU Transport Layer Security (TLS) Library

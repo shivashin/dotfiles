@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# コミットする変更に秘密情報が含まれていないかを gitleaks で調べる。
+# setup.sh が core.hooksPath を .githooks に設定する。
+#
+# 標準のルールに加えて、~/.config/gitleaks/dotfiles-private.toml があればそのルールでも調べる。
+# 会社名やアカウント ID など、公開リポジトリに書きたくない文字列はそちらに書く（このリポジトリには入れない）。
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "gitleaks が見つかりません。macOS は brew install gitleaks、Linux は mise install で入れてください" >&2
+  exit 1
+fi
+
+gitleaks git --pre-commit --staged --redact --no-banner --log-level warn
+
+private="${XDG_CONFIG_HOME:-$HOME/.config}/gitleaks/dotfiles-private.toml"
+if [ -f "$private" ]; then
+  gitleaks git --pre-commit --staged --redact --no-banner --log-level warn --config "$private"
+fi

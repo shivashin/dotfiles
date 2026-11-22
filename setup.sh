@@ -106,6 +106,9 @@ setup_common() {
   log "Vim のプラグインマネージャ（dpp.vim / denops.vim）"
   bash "$DOTFILES/init_vim.sh"
 
+  log "dotfiles の Git フック（gitleaks による秘密情報のチェック）"
+  git -C "$DOTFILES" config core.hooksPath .githooks
+
   if [[ "$(basename "${SHELL:-}")" != "zsh" ]]; then
     echo
     echo "ログインシェルが zsh ではありません。必要なら次を実行してください:"
