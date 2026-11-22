@@ -1,6 +1,4 @@
 tap "hashicorp/tap"
-tap "homebrew/bundle"
-tap "homebrew/services"
 tap "macvim-dev/macvim"
 tap "osx-cross/avr"
 tap "wpscanteam/tap"
@@ -148,8 +146,6 @@ brew "perl"
 brew "plantuml"
 # Object-relational database system
 brew "postgresql@14"
-# Protocol buffers (Google's data interchange format)
-brew "protobuf@21"
 # Persistent key-value database, with built-in net interface
 brew "redis", restart_service: :changed, link: false
 # Search tool like grep and The Silver Searcher
