@@ -28,7 +28,7 @@ jobs:
           sudo apt-get install -y -qq zsh tmux
 
       - name: shellcheck
-        run: shellcheck ./*.sh .github/scripts/*.sh
+        run: shellcheck ./*.sh .github/scripts/*.sh .githooks/*
 
       - name: .zshrc の文法チェック
         run: zsh -n .zshrc
@@ -50,13 +50,34 @@ jobs:
         run: brew install tmux
 
       - name: シェルスクリプトの文法チェック
-        run: for f in ./*.sh .github/scripts/*.sh; do bash -n "$f"; done
+        run: for f in ./*.sh .github/scripts/*.sh .githooks/*; do bash -n "$f"; done
 
       - name: .zshrc の文法チェック
         run: zsh -n .zshrc
 
       - name: .tmux.conf の文法チェック
         run: tmux -f /dev/null start-server \; source-file -n .tmux.conf
+
+  # コミットに秘密情報が含まれていないかを調べる
+  gitleaks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      # PR に含まれるコミットの一覧を取得するのに使う
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 結果はジョブのログとサマリーで見る。PR へのコメントと、検出内容を含むファイルのアップロードはしない
+          GITLEAKS_ENABLE_COMMENTS: "false"
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
 
   # Linux のコンテナで setup.sh を実行する
   setup-linux:
