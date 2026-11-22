@@ -12,7 +12,7 @@ macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定フ�
 | `.gitconfig` / `.gitconfig.dotfiles` | Git の設定。dotfiles リポジトリでだけ個人用の名前とアドレスを使う | `~/.gitconfig` |
 | `.Brewfile` | Homebrew で入れるパッケージの一覧 | `~/.Brewfile` |
 | `mise/config.toml` | mise のグローバル設定（言語ランタイムと CLI のデフォルトバージョン） | `~/.config/mise/config.toml` |
-| `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
+| `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno, gitleaks） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
 | `.latexmkrc` | latexmk の設定 | `~/.latexmkrc` |
 | `setup.sh` | セットアップ全体を行う。OS を判定して必要なものを入れる | |
 | `dotfileslink.sh` | 上の表のシンボリックリンクをまとめて張る（`setup.sh` から呼ばれる） | |
@@ -21,6 +21,7 @@ macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定フ�
 | `update_vim_plugin_versions.sh` | `tomls/` の Vim プラグインのリビジョンを、安全性チェック付きで更新する | |
 | `update_zplug_versions.sh` | `.zshrc` の zplug プラグインのタグを更新する | |
 | `plantuml` | PlantUML で PNG を作って開くラッパー | |
+| `.githooks/pre-commit` | コミットする変更に秘密情報がないかを gitleaks で調べる | `setup.sh` が `core.hooksPath` に設定する |
 
 ## セットアップ
 
@@ -43,7 +44,7 @@ git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
 - dotfiles は `~/dotfiles` に clone する必要がある。ほかの場所だと `setup.sh` はエラーで止まる。
 - Linux では、root 以外で実行すると sudo を使う。
 - Amazon Linux 2023 は `curl-minimal` が入っていて、`curl` を入れると衝突するので、`curl` コマンドがあれば入れない。
-- 動作確認は macOS、Ubuntu 24.04、Amazon Linux 2023 で行った。
+- Ubuntu 24.04 と Amazon Linux 2023 では、CI で毎回動作を確認している（下の「CI」を参照）。
 
 実行後の手順:
 
@@ -105,8 +106,8 @@ brew bundle cleanup --global         # .Brewfile にないものを表示する�
 
 ## Git
 
-- 名前とアドレスは、普段は会社用（`.gitconfig` の `[user]`）を使う。
-- `~/dotfiles` の中でだけ、`includeIf "gitdir:~/dotfiles/"` で `.gitconfig.dotfiles` の個人用の名前とアドレスに切り替わる。
+- 普段使う名前とアドレスは `~/.gitconfig.local` に書き、`.gitconfig` の `[include]` で読み込む。会社の情報を公開リポジトリに入れないため、このファイルは dotfiles に入れない。`setup.sh` は、このファイルがなければ作り方を表示する。
+- `~/dotfiles` の中でだけ、`includeIf "gitdir:~/dotfiles/"` で `.gitconfig.dotfiles` の個人用の名前とアドレスに切り替わる。`~/.gitconfig.local` より後に読み込むので、こちらが優先される。
 - 確認は `git config user.email`。
 
 ## キーバインド
@@ -142,6 +143,56 @@ tmux のセッションは、tmux-resurrect と tmux-continuum で自動的に�
 ```
 
 どちらも、公開から一定の日数がたったリビジョンだけを対象にする。Vim 側は、差分に `curl` や `eval` などの怪しいパターンがないかも確認する。
+
+## CI
+
+GitHub Actions（`.github/workflows/ci.yml`）で、PR と `master` への push のたびに次を確認する。
+
+| ジョブ | 内容 |
+|---|---|
+| `lint` | Linux で shellcheck、`zsh -n .zshrc`、tmux による `.tmux.conf` の文法チェック |
+| `lint-macos` | macOS で `bash -n`、`zsh -n .zshrc`、`.tmux.conf` の文法チェック。`.Brewfile` の tap / formula / cask が Homebrew でまだ配布されているかも調べる（インストールはしない） |
+| `actions-lint` | actionlint で workflow の文法を、zizmor で workflow のセキュリティ（権限の与えすぎ、`${{ }}` の埋め込みによるコマンドの注入など）を調べる |
+| `gitleaks` | 履歴全体に秘密情報（アクセスキー、トークン、秘密鍵など）がないかを調べる |
+| `setup-linux` | Ubuntu 24.04 と Amazon Linux 2023 のコンテナで `setup.sh` を 2 回実行し、zsh と tmux がエラーなく起動すること、mise で入れたツールが使えることを確認する |
+
+macOS では `setup.sh` を実行しない。`.Brewfile` の cask まで全部入れると時間がかかりすぎるため。
+
+`setup-linux` は、手元でも Docker で同じように実行できる。
+
+```sh
+docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash /src/.github/scripts/test-setup-linux.sh
+docker run --rm -v "$PWD":/src:ro amazonlinux:2023 bash /src/.github/scripts/test-setup-linux.sh
+```
+
+Rancher Desktop の VM からは macOS の `/tmp` が見えないので、マウントするディレクトリはホーム配下に置く。
+
+workflow で使う action は commit SHA で固定している。Dependabot（`.github/dependabot.yml`）が毎週、新しいバージョンへ上げる PR を作る。公開から 7 日たっていないバージョンは対象にしない。
+
+actionlint は GitHub Action として配布されていないので、Dependabot では上がらない。`ci.yml` の `ACTIONLINT_VERSION` と `ACTIONLINT_SHA256`（リリースの `actionlint_<version>_checksums.txt` にある `linux_amd64` の値）を手で更新する。
+
+`.Brewfile` の確認は手元でも実行できる（`.github/scripts/check-brewfile.sh .Brewfile`）。非推奨（deprecated）の formula は警告だけで、無効（disabled）になったものや見つからないものがあると失敗する。
+
+## 秘密情報のチェック
+
+公開リポジトリなので、秘密情報は push する前に止める。
+
+- `setup.sh` が `git config core.hooksPath .githooks` を設定し、コミットのたびに `.githooks/pre-commit` が gitleaks で、コミットする変更を調べる。見つかるとコミットが止まる。
+- gitleaks の標準のルールに加えて、`~/.config/gitleaks/dotfiles-private.toml` があれば、そのルールでも調べる。会社名やアカウント ID のように、公開リポジトリに書きたくない文字列はこのファイルに書く。このファイルは dotfiles に入れない。
+- 誤検出でコミットを止められたときは、内容を確認してから `git commit --no-verify` で通す。
+- CI の `gitleaks` ジョブは標準のルールだけで調べる。手元のルールは CI では使えない。
+
+手元のルールファイルの例:
+
+```toml
+[[rules]]
+id = "company-identifier"
+regex = '''(?i)(?:^|[^a-z])(会社名|プロジェクト名)(?:[^a-z]|$)'''
+
+[[rules]]
+id = "aws-account-id"
+regex = '''\b[0-9]{12}\b'''
+```
 
 ## 既知の注意点
 

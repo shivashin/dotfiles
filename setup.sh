@@ -106,10 +106,20 @@ setup_common() {
   log "Vim のプラグインマネージャ（dpp.vim / denops.vim）"
   bash "$DOTFILES/init_vim.sh"
 
+  log "dotfiles の Git フック（gitleaks による秘密情報のチェック）"
+  git -C "$DOTFILES" config core.hooksPath .githooks
+
   if [[ "$(basename "${SHELL:-}")" != "zsh" ]]; then
     echo
     echo "ログインシェルが zsh ではありません。必要なら次を実行してください:"
     echo "  chsh -s \"$(command -v zsh)\""
+  fi
+
+  if [[ ! -f "$HOME/.gitconfig.local" ]]; then
+    echo
+    echo "$HOME/.gitconfig.local がありません。普段使う Git の名前とアドレスを書いてください（dotfiles には入れない）:"
+    echo "  git config --file ~/.gitconfig.local user.name  \"<名前>\""
+    echo "  git config --file ~/.gitconfig.local user.email \"<アドレス>\""
   fi
 
   echo
