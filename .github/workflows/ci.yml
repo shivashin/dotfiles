@@ -31,8 +31,8 @@ jobs:
       - name: shellcheck
         run: shellcheck ./*.sh .github/scripts/*.sh .githooks/*
 
-      - name: .zshrc の文法チェック
-        run: zsh -n .zshrc
+      - name: zsh の設定の文法チェック
+        run: for f in .zshrc zsh/*.zsh; do zsh -n "$f"; done
 
       - name: .tmux.conf の文法チェック
         run: tmux -f /dev/null start-server \; source-file -n .tmux.conf
@@ -53,8 +53,8 @@ jobs:
       - name: シェルスクリプトの文法チェック
         run: for f in ./*.sh .github/scripts/*.sh .githooks/*; do bash -n "$f"; done
 
-      - name: .zshrc の文法チェック
-        run: zsh -n .zshrc
+      - name: zsh の設定の文法チェック
+        run: for f in .zshrc zsh/*.zsh; do zsh -n "$f"; done
 
       - name: .tmux.conf の文法チェック
         run: tmux -f /dev/null start-server \; source-file -n .tmux.conf
