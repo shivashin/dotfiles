@@ -21,15 +21,6 @@ fi
 # root で実行しているときは sudo を使わない
 if [[ "$(id -u)" -eq 0 ]]; then SUDO=(); else SUDO=(sudo); fi
 
-clone_if_missing() {
-  local repo="$1" dest="$2"
-  if [[ -d "$dest" ]]; then
-    skip "$dest はあります"
-  else
-    git clone --depth 1 "$repo" "$dest"
-  fi
-}
-
 # ---------------------------------------------------------------- macOS
 setup_macos() {
   log "Homebrew"
@@ -101,8 +92,8 @@ setup_common() {
   # sheldon は macOS では Homebrew、Linux では mise で入る。mise exec を通すとどちらでも見つかる
   mise exec -- sheldon lock
 
-  log "tmux のプラグインマネージャ（tpm）"
-  clone_if_missing https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+  log "tmux のプラグイン（tmux/plugins.lock のコミットに固定）"
+  bash "$DOTFILES/tmux-plugins.sh" install
 
   log "Vim のプラグインマネージャ（dpp.vim / denops.vim）"
   bash "$DOTFILES/init_vim.sh"
@@ -125,7 +116,6 @@ setup_common() {
 
   echo
   echo "残りの手順:"
-  echo "  - tmux を起動し、prefix（Ctrl-a）+ I で tpm のプラグインを入れる"
   echo "  - Vim で :call dpp#async_ext_action('installer', 'install') を実行する"
 }
 
