@@ -8,9 +8,9 @@
     tool = vimdiff
 [difftool]
     prompt = false
-[user]
-	name = ryo.shibahara
-	email = ryo.shibahara@aktsk.jp
+# 普段使う名前とアドレスは、dotfiles に入れない ~/.gitconfig.local に書く
+[include]
+	path = ~/.gitconfig.local
 [credential]
 	helper = manager
 	helper =
@@ -19,6 +19,6 @@
 	editor = vim
 [credential "https://dev.azure.com"]
 	useHttpPath = true
-# dotfiles リポジトリでは個人用のアドレスを使う（[user] より後に置いて上書きする）
+# dotfiles リポジトリでは個人用のアドレスを使う（~/.gitconfig.local より後に置いて上書きする）
 [includeIf "gitdir:~/dotfiles/"]
 	path = ~/dotfiles/.gitconfig.dotfiles

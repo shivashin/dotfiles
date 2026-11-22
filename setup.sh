@@ -115,6 +115,13 @@ setup_common() {
     echo "  chsh -s \"$(command -v zsh)\""
   fi
 
+  if [[ ! -f "$HOME/.gitconfig.local" ]]; then
+    echo
+    echo "$HOME/.gitconfig.local がありません。普段使う Git の名前とアドレスを書いてください（dotfiles には入れない）:"
+    echo "  git config --file ~/.gitconfig.local user.name  \"<名前>\""
+    echo "  git config --file ~/.gitconfig.local user.email \"<アドレス>\""
+  fi
+
   echo
   echo "残りの手順:"
   echo "  - zsh を起動し、zplug のプラグインを入れるか聞かれたら y を押す"

@@ -106,8 +106,8 @@ brew bundle cleanup --global         # .Brewfile にないものを表示する�
 
 ## Git
 
-- 名前とアドレスは、普段は会社用（`.gitconfig` の `[user]`）を使う。
-- `~/dotfiles` の中でだけ、`includeIf "gitdir:~/dotfiles/"` で `.gitconfig.dotfiles` の個人用の名前とアドレスに切り替わる。
+- 普段使う名前とアドレスは `~/.gitconfig.local` に書き、`.gitconfig` の `[include]` で読み込む。会社の情報を公開リポジトリに入れないため、このファイルは dotfiles に入れない。`setup.sh` は、このファイルがなければ作り方を表示する。
+- `~/dotfiles` の中でだけ、`includeIf "gitdir:~/dotfiles/"` で `.gitconfig.dotfiles` の個人用の名前とアドレスに切り替わる。`~/.gitconfig.local` より後に読み込むので、こちらが優先される。
 - 確認は `git config user.email`。
 
 ## キーバインド
