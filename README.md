@@ -6,20 +6,22 @@ macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定フ�
 
 | ファイル | 内容 | リンク先 |
 |---|---|---|
-| `.zshrc` | zsh の設定（zplug、プロンプト、fzf のキーバインド、mise / zoxide の有効化） | `~/.zshrc` |
+| `.zshrc` | `zsh/*.zsh` をファイル名の順に読み込むだけのファイル | `~/.zshrc` |
+| `zsh/` | zsh の設定を役割ごとに分けたもの（下の「zsh の設定」を参照） | |
+| `sheldon/plugins.toml` | zsh のプラグイン（sheldon） | `~/.config/sheldon/plugins.toml` |
 | `.tmux.conf` | tmux の設定（tpm、セッションの自動復元、fzf 連携） | `~/.tmux.conf` |
 | `.vimrc` / `dpp.ts` / `tomls/` | Vim の設定。プラグイン管理は dpp.vim（denops 経由で deno が必要） | `~/.vimrc` |
 | `.gitconfig` / `.gitconfig.dotfiles` | Git の設定。dotfiles リポジトリでだけ個人用の名前とアドレスを使う | `~/.gitconfig` |
 | `.Brewfile` | Homebrew で入れるパッケージの一覧 | `~/.Brewfile` |
 | `mise/config.toml` | mise のグローバル設定（言語ランタイムと CLI のデフォルトバージョン） | `~/.config/mise/config.toml` |
-| `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno, gitleaks） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
+| `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno, gitleaks, sheldon） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
 | `.latexmkrc` | latexmk の設定 | `~/.latexmkrc` |
 | `setup.sh` | セットアップ全体を行う。OS を判定して必要なものを入れる | |
-| `dotfileslink.sh` | 上の表のシンボリックリンクをまとめて張る（`setup.sh` から呼ばれる） | |
+| `dotfileslink.sh` | 上の表のシンボリックリンクをまとめて張る（`setup.sh` から呼ばれる）。リンク先に実体のファイルがあれば `<名前>.bak.<日時>` に退避してから張る | |
 | `init_vim.sh` | dpp.vim と denops.vim の本体を `~/.cache/dpp` に clone する（`setup.sh` から呼ばれる） | |
 | `tmux-new-session-fzf.sh` | tmux の `prefix + N` で使う、zoxide の履歴からディレクトリを選んで window / pane を開くスクリプト | |
 | `update_vim_plugin_versions.sh` | `tomls/` の Vim プラグインのリビジョンを、安全性チェック付きで更新する | |
-| `update_zplug_versions.sh` | `.zshrc` の zplug プラグインのタグを更新する | |
+| `update_zsh_plugin_versions.sh` | `sheldon/plugins.toml` の zsh プラグインのタグを更新する | |
 | `plantuml` | PlantUML で PNG を作って開くラッパー | |
 | `.githooks/pre-commit` | コミットする変更に秘密情報がないかを gitleaks で調べる | `setup.sh` が `core.hooksPath` に設定する |
 
@@ -38,7 +40,8 @@ git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
 | シンボリックリンク | `dotfileslink.sh` | `dotfileslink.sh`（`mise/linux.toml` もリンクする） |
 | mise | Homebrew で入る | 公式のインストーラ（`https://mise.run`）で `~/.local/bin` に入れる |
 | ランタイムと CLI | `mise install` | `mise install`（fzf, ripgrep, zoxide, uv, deno も入る） |
-| zplug / tpm / dpp.vim | clone する | clone する |
+| zsh のプラグイン | `sheldon lock` で取得する | `sheldon lock` で取得する |
+| tpm / dpp.vim | clone する | clone する |
 | Powerline フォント | 入れる | 入れない（手元のターミナル側で必要なもの） |
 
 - dotfiles は `~/dotfiles` に clone する必要がある。ほかの場所だと `setup.sh` はエラーで止まる。
@@ -49,7 +52,6 @@ git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
 実行後の手順:
 
 - ログインシェルを zsh に変える（`chsh -s "$(command -v zsh)"`）。`setup.sh` が必要なときに表示する。
-- zsh を起動すると、zplug が足りないプラグインを入れるか聞いてくるので `y` を押す。
 - tmux を起動して `prefix + I`（大文字の I）を押し、tpm のプラグインを入れる。
 - Vim を起動すると dpp の状態ファイルが作られる。プラグインは `:call dpp#async_ext_action('installer', 'install')` で入れる。
 
@@ -104,6 +106,23 @@ brew bundle cleanup --global         # .Brewfile にないものを表示する�
 - 初めて入るプロジェクトに `mise.toml` があると、`mise trust` を求められる。中身を確認してから実行する。
 - cron や `bash -c` で起動するスクリプトなど、`.zshrc` を読まない環境では mise のツールが見えない。`mise exec -- <コマンド>` で実行するか、`~/.local/share/mise/shims` を PATH に入れる。
 
+## zsh の設定
+
+`~/.zshrc` は `~/dotfiles/zsh/*.zsh` をファイル名の順に読み込む。設定を足すときは、役割に合うファイルに書く。
+
+| ファイル | 内容 |
+|---|---|
+| `00-env.zsh` | 言語、OS ごとの設定（Homebrew など）、環境変数、mise の有効化 |
+| `10-history.zsh` | 履歴 |
+| `20-options.zsh` | ディレクトリ移動、グロブ、入出力、キーバインド（vi モード）などのオプション |
+| `30-completion.zsh` | 補完の設定（`compinit` は sheldon で実行する） |
+| `40-prompt.zsh` | プロンプト |
+| `50-aliases.zsh` | alias と関数 |
+| `60-plugins.zsh` | sheldon でプラグインを読み込む |
+| `70-tools.zsh` | fzf のキーバインド、cdr、Rancher Desktop と npm の PATH、zoxide |
+
+プラグインは `sheldon/plugins.toml` に書いた順に読み込む。zsh-completions のあとで `compinit` を実行し、zsh-syntax-highlighting は最後に読み込む。
+
 ## Git
 
 - 普段使う名前とアドレスは `~/.gitconfig.local` に書き、`.gitconfig` の `[include]` で読み込む。会社の情報を公開リポジトリに入れないため、このファイルは dotfiles に入れない。`setup.sh` は、このファイルがなければ作り方を表示する。
@@ -136,8 +155,9 @@ tmux のセッションは、tmux-resurrect と tmux-continuum で自動的に�
 ## プラグインの更新
 
 ```sh
-~/dotfiles/update_zplug_versions.sh           # リリースから 30 日以上たったタグだけを対象にする
-~/dotfiles/update_zplug_versions.sh 14        # 14 日以上に変える
+~/dotfiles/update_zsh_plugin_versions.sh      # リリースから 30 日以上たったタグだけを対象にする
+~/dotfiles/update_zsh_plugin_versions.sh 14   # 14 日以上に変える
+sheldon lock --update                         # 更新した plugins.toml のとおりにプラグインを取り直す
 ~/dotfiles/update_vim_plugin_versions.sh      # 全プラグインを確認し、更新ごとに確認を求める
 ~/dotfiles/update_vim_plugin_versions.sh -d 14 Shougo/ddc.vim
 ```
@@ -198,4 +218,3 @@ regex = '''\b[0-9]{12}\b'''
 
 - Rancher Desktop の PATH 管理は手動にしている（`rdctl set --application.path-management-strategy manual`）。`~/.rd/bin` は `.zshrc` で自分で PATH に入れている。自動（`rcfiles`）に戻すと、Rancher Desktop が `.zshrc` に管理ブロックを書き込み、`$HOME` を絶対パスに書き換えるので注意する。
 - onelogin-aws-cli 0.1.19 は、新しい setuptools から消えた `pkg_resources` を使う。そのため `mise/config.toml` で `setuptools<81` を一緒に入れている。実行時に出る `pkg_resources is deprecated` の警告は無視してよい。
-- zplug は Homebrew では入れず、`~/.zplug` に clone したものを使う（`setup.sh` が clone する）。
