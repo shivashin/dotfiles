@@ -50,6 +50,15 @@ echo "::group::tmux の起動"
 run_as_user 'tmux -f ~/.tmux.conf new-session -d -s ci && sleep 2 && tmux show -sv set-clipboard && tmux kill-server'
 echo "::endgroup::"
 
+echo "::group::tmux のプラグインが plugins.lock のコミットになっているか"
+# shellcheck disable=SC2016
+run_as_user 'grep -v -E "^[[:space:]]*(#|$)" ~/dotfiles/tmux/plugins.lock | while read -r repo rev; do
+  actual=$(git -C ~/.tmux/plugins/${repo##*/} rev-parse HEAD)
+  [ "$actual" = "$rev" ] || { echo "一致しません: $repo $actual (期待: $rev)"; exit 1; }
+  echo "ok: $repo ${rev:0:12}"
+done'
+echo "::endgroup::"
+
 echo "::group::mise で入れたツール"
 # $c などはテスト用ユーザーの zsh で展開させるので、シングルクォートのままにする
 # shellcheck disable=SC2016

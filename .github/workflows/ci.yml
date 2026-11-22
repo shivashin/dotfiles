@@ -31,6 +31,9 @@ jobs:
       - name: shellcheck
         run: shellcheck ./*.sh .github/scripts/*.sh .githooks/*
 
+      - name: .tmux.conf と tmux/plugins.lock の一致
+        run: DOTFILES="$GITHUB_WORKSPACE" ./tmux-plugins.sh check
+
       - name: zsh の設定の文法チェック
         run: for f in .zshrc zsh/*.zsh; do zsh -n "$f"; done
 

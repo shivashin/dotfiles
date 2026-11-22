@@ -10,6 +10,8 @@ macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定フ�
 | `zsh/` | zsh の設定を役割ごとに分けたもの（下の「zsh の設定」を参照） | |
 | `sheldon/plugins.toml` | zsh のプラグイン（sheldon） | `~/.config/sheldon/plugins.toml` |
 | `.tmux.conf` | tmux の設定（tpm、セッションの自動復元、fzf 連携） | `~/.tmux.conf` |
+| `tmux/plugins.lock` | tmux のプラグインと、固定するコミット | |
+| `tmux-plugins.sh` | tmux のプラグインを `plugins.lock` のとおりに入れる・更新する | |
 | `.vimrc` / `dpp.ts` / `tomls/` | Vim の設定。プラグイン管理は dpp.vim（denops 経由で deno が必要） | `~/.vimrc` |
 | `.gitconfig` / `.gitconfig.dotfiles` | Git の設定。dotfiles リポジトリでだけ個人用の名前とアドレスを使う | `~/.gitconfig` |
 | `.Brewfile` | Homebrew で入れるパッケージの一覧 | `~/.Brewfile` |
@@ -41,7 +43,8 @@ git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
 | mise | Homebrew で入る | 公式のインストーラ（`https://mise.run`）で `~/.local/bin` に入れる |
 | ランタイムと CLI | `mise install` | `mise install`（fzf, ripgrep, zoxide, uv, deno も入る） |
 | zsh のプラグイン | `sheldon lock` で取得する | `sheldon lock` で取得する |
-| tpm / dpp.vim | clone する | clone する |
+| tmux のプラグイン | `tmux-plugins.sh install` | `tmux-plugins.sh install` |
+| dpp.vim | clone する | clone する |
 | Powerline フォント | 入れる | 入れない（手元のターミナル側で必要なもの） |
 
 - dotfiles は `~/dotfiles` に clone する必要がある。ほかの場所だと `setup.sh` はエラーで止まる。
@@ -52,7 +55,6 @@ git clone https://github.com/shivashin/dotfiles.git ~/dotfiles
 実行後の手順:
 
 - ログインシェルを zsh に変える（`chsh -s "$(command -v zsh)"`）。`setup.sh` が必要なときに表示する。
-- tmux を起動して `prefix + I`（大文字の I）を押し、tpm のプラグインを入れる。
 - Vim を起動すると dpp の状態ファイルが作られる。プラグインは `:call dpp#async_ext_action('installer', 'install')` で入れる。
 
 `.zshrc` と `.tmux.conf` は OS を判定して設定を切り替える。
@@ -173,7 +175,18 @@ sheldon lock --update                         # 更新した plugins.toml のと
 ~/dotfiles/update_vim_plugin_versions.sh -d 14 Shougo/ddc.vim
 ```
 
-どちらも、公開から一定の日数がたったリビジョンだけを対象にする。Vim 側は、差分に `curl` や `eval` などの怪しいパターンがないかも確認する。
+tmux のプラグインは、`tmux/plugins.lock` に書いたコミットに固定している。tpm はコミットを指定してインストールできないので、tpm は読み込みだけに使い、インストールと更新は `tmux-plugins.sh` で行う。
+
+```sh
+~/dotfiles/tmux-plugins.sh update             # 公開から 30 日以上たった最新のコミットに plugins.lock を更新する
+~/dotfiles/tmux-plugins.sh update -d 14       # 14 日以上に変える
+~/dotfiles/tmux-plugins.sh install            # plugins.lock のとおりに ~/.tmux/plugins に入れる
+```
+
+- tpm の `prefix + I` は `tmux-plugins.sh install` に置き換えている。`prefix + U`（tpm の更新）は、最新のコミットを入れてしまうので使えないようにしている。
+- プラグインを足したり消したりするときは、`.tmux.conf` の `@tpm_plugins` と `tmux/plugins.lock` の両方を直す。CI が両方の一致を確認する。
+
+どれも、公開から一定の日数がたったリビジョンだけを対象にする。Vim 側は、差分に `curl` や `eval` などの怪しいパターンがないかも確認する。
 
 ## CI
 
@@ -181,11 +194,11 @@ GitHub Actions（`.github/workflows/ci.yml`）で、PR と `master` への push 
 
 | ジョブ | 内容 |
 |---|---|
-| `lint` | Linux で shellcheck、`zsh -n .zshrc`、tmux による `.tmux.conf` の文法チェック |
+| `lint` | Linux で shellcheck、`zsh -n .zshrc`、tmux による `.tmux.conf` の文法チェック、`.tmux.conf` と `tmux/plugins.lock` のプラグインの一致 |
 | `lint-macos` | macOS で `bash -n`、`zsh -n .zshrc`、`.tmux.conf` の文法チェック。`.Brewfile` の tap / formula / cask が Homebrew でまだ配布されているかも調べる（インストールはしない） |
 | `actions-lint` | actionlint で workflow の文法を、zizmor で workflow のセキュリティ（権限の与えすぎ、`${{ }}` の埋め込みによるコマンドの注入など）を調べる |
 | `gitleaks` | 履歴全体に秘密情報（アクセスキー、トークン、秘密鍵など）がないかを調べる |
-| `setup-linux` | Ubuntu 24.04 と Amazon Linux 2023 のコンテナで `setup.sh` を 2 回実行し、zsh と tmux がエラーなく起動すること、mise で入れたツールが使えることを確認する |
+| `setup-linux` | Ubuntu 24.04 と Amazon Linux 2023 のコンテナで `setup.sh` を 2 回実行し、zsh と tmux がエラーなく起動すること、tmux のプラグインが `plugins.lock` のコミットで入ること、mise で入れたツールが使えることを確認する |
 
 macOS では `setup.sh` を実行しない。`.Brewfile` の cask まで全部入れると時間がかかりすぎるため。
 
