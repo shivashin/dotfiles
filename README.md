@@ -18,6 +18,7 @@ macOS（Apple Silicon）と Linux（apt / dnf）で使う個人用の設定フ�
 | `mise/config.toml` | mise のグローバル設定（言語ランタイムと CLI のデフォルトバージョン） | `~/.config/mise/config.toml` |
 | `mise/linux.toml` | Linux でだけ mise で入れるツール（fzf, ripgrep, zoxide, uv, deno, gitleaks, sheldon） | `~/.config/mise/conf.d/linux.toml`（Linux のみ） |
 | `.latexmkrc` | latexmk の設定 | `~/.latexmkrc` |
+| `adv360/` | Kinesis Advantage360（SmartSet）のキー割り当てと LED の設定のバックアップ。キー配列とレイヤーは `adv360/README.md` に書いてある | リンクしない（キーボードの v-Drive に手でコピーする） |
 | `setup.sh` | セットアップ全体を行う。OS を判定して必要なものを入れる | |
 | `dotfileslink.sh` | 上の表のシンボリックリンクをまとめて張る（`setup.sh` から呼ばれる）。リンク先に実体のファイルがあれば `<名前>.bak.<日時>` に退避してから張る | |
 | `init_vim.sh` | dpp.vim と denops.vim の本体を `~/.cache/dpp` に clone する（`setup.sh` から呼ばれる） | |
